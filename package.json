@@ -1,0 +1,36 @@
+{
+  "name": "library-33-backend",
+  "version": "1.0.0",
+  "description": "Backend for site Library 33",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zvshka/library-33-backend.git"
+  },
+  "keywords": [
+    "backend"
+  ],
+  "author": "Pushpurs Andrey ISPsp-119 (zvshka)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zvshka/library-33-backend/issues"
+  },
+  "homepage": "https://github.com/zvshka/library-33-backend#readme",
+  "dependencies": {
+    "@babel/runtime": "^7.15.3",
+    "express": "^4.17.1",
+    "joi": "^17.4.2",
+    "joi-to-swagger": "^6.0.1",
+    "swagger-ui-express": "^4.1.6"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/plugin-transform-runtime": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@babel/register": "^7.15.3"
+  }
+}
