@@ -1,4 +1,5 @@
-import {swLoginRouter} from './routes/login'
+import {swUserRouter} from './routes/user'
+import {swUsersRouter} from './routes/users'
 const swagger = {
     openapi: '3.0.0',
     info: {
@@ -13,7 +14,8 @@ const swagger = {
         }
     ],
     paths: {
-        ...swLoginRouter
+        ...swUserRouter,
+        ...swUsersRouter
     }
 }
 export default swagger

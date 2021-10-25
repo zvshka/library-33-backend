@@ -1,9 +1,9 @@
 import express from "express";
-import getUsersList, {swGetUser} from './login-get.route'
-import createTheUser, {swPostUser} from './login-post.route'
+import getUsersList, {swGetUser} from './user-get.route'
+import createTheUser, {swPostUser} from './user-post.route'
 // here the our swagger info
-export const swLoginRouter = {
-    "/login": {
+export const swUserRouter = {
+    "/user": {
         "get": {
             ...swGetUser
         },

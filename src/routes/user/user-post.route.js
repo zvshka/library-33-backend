@@ -1,8 +1,9 @@
-import schema, {joiSchema} from './login.spec/login.schema'
+import schema, {joiSchema} from './user.spec/user.schema'
+import prisma from "../../lib/prisma";
 export const swPostUser = {
     "summary": "Create the new user",
     "tags": [
-        "login"
+        "User"
     ],
     "requestBody": {
         "content": {
@@ -25,7 +26,13 @@ export const swPostUser = {
 export default async (req, res) => {
     try {
         await joiSchema.validateAsync(req.body)
-        res.send('This is a login POST service')
+        const user = await prisma.user.create({
+            data: req.body,
+            include: {
+                role: true
+            }
+        })
+        res.send(user)
     } catch(err) {
         res.send(err)
     }

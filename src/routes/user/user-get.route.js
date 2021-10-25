@@ -1,15 +1,15 @@
 export const swGetUser = {
     "summary": "Retrieve the list with all of the users",
     "tags": [
-        "login"
+        "User"
     ],
     "responses": {
         "200": {
-            "description": "Object with users info"
+            "description": "Object with user info"
         }
     }
 }
 // the route
 export default async (req, res) => {
-    res.send('This is a login GET service')
+    res.send("TODO find by id/username")
 }
