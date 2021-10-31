@@ -1,19 +1,32 @@
 import express from "express";
-import getUsersList, {swGetUser} from './user-get.route'
-import createTheUser, {swPostUser} from './user-post.route'
+import {swUserController, UserController} from "../../controllers/UserController";
 // here the our swagger info
 export const swUserRouter = {
-    "/user": {
-        "get": {
-            ...swGetUser
-        },
+    "/user/register": {
         "post": {
-            ...swPostUser
+            ...swUserController.register
+        }
+    },
+    "/user/login": {
+        "post": {
+            ...swUserController.login
+        }
+    },
+    "/user/logout": {
+        "post": {
+            ...swUserController.logout
+        }
+    },
+    "/user/refresh": {
+        "get": {
+            ...swUserController.refresh
         }
     }
 }
 // here the routes
 const router = express.Router()
-    .get('/', getUsersList)
-    .post('/', createTheUser)
+    .post("/login", UserController.login)
+    .post("/register", UserController.registration)
+    .post("/logout", UserController.logout)
+    .get("/refresh", UserController.refresh)
 export default router

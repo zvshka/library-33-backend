@@ -1,9 +1,9 @@
 import {swUserRouter} from './routes/user'
-import {swUsersRouter} from './routes/users'
+
 const swagger = {
     openapi: '3.0.0',
     info: {
-        title: 'Express API',
+        title: 'Library 33 API',
         version: '1.0.0',
         description: 'The REST API test service'
     },
@@ -13,9 +13,20 @@ const swagger = {
             description: 'Development server'
         }
     ],
+    components: {
+        securitySchemes: {
+            bearerAuth: {
+                type: "http",
+                scheme: "bearer",
+                bearerFormat: "JWT"
+            }
+        }
+    },
+    security: {
+        bearerAuth: []
+    },
     paths: {
         ...swUserRouter,
-        ...swUsersRouter
     }
 }
 export default swagger

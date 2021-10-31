@@ -2,131 +2,125 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator docs {
+  provider = "node node_modules/prisma-docs-generator"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model Author {
-  id          Int           @id
-  name        String        @db.VarChar(255)
-  author_book author_book[] @ignore
+model author {
+  id    Int    @id @default(autoincrement())
+  name  String @unique @db.VarChar(255)
+  books book[]
 }
 
-model Book {
-  id          Int           @id @default(autoincrement())
-  title       String        @db.VarChar(255)
-  publisher   Int
-  Publisher   Publisher     @relation(fields: [publisher], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "book_publisher_foreign")
-  Liked       Liked[]       @ignore
-  Real        Real[]
-  Review      Review[]      @ignore
-  author_book author_book[] @ignore
-  style_book  style_book[]  @ignore
+model book {
+  id    Int    @id @default(autoincrement())
+  title String @db.VarChar(255)
+
+  publisher   publisher @relation(fields: [publisherId], references: [id])
+  publisherId Int
+
+  real    real[]
+  reviews review[]
+  authors author[]
+  styles  style[]
+  likes   user[]
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model Liked {
+model offence {
+  id Int @id @default(autoincrement())
+
   user_id Int
-  book_id Int
-  Book    Book @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "liked_book_id_foreign")
-  User    User @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "liked_user_id_foreign")
+  real_id Int
 
-  @@ignore
-}
+  real real @relation(fields: [real_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "offence_real_id_foreign")
+  user user @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "offence_user_id_foreign")
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model Offence {
-  user_id     Int
-  real_id     Int
   date        DateTime @db.Date
   description String   @db.VarChar(255)
   expire      DateTime @db.Date
-  Real        Real     @relation(fields: [real_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "offence_real_id_foreign")
-  User        User     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "offence_user_id_foreign")
-
-  @@ignore
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model Order {
-  real_id     Int
-  user_id     Int
+model order {
+  id Int @id @default(autoincrement())
+
+  real_id Int
+  user_id Int
+  real    real @relation(fields: [real_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_real_id_foreign")
+  user    user @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_user_id_foreign")
+
   return_date DateTime @db.Date
-  Real        Real     @relation(fields: [real_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_real_id_foreign")
-  User        User     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_user_id_foreign")
-
-  @@ignore
 }
 
-model Publisher {
-  id   Int    @id
-  name String @db.VarChar(255)
-  Book Book[]
+model publisher {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(255)
+  books book[]
 }
 
-model Real {
-  id        Int       @id
+model real {
+  id        Int       @id @default(autoincrement())
   book_id   Int
+  book      book      @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "real_book_id_foreign")
   available Boolean
-  Book      Book      @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "real_book_id_foreign")
-  Offence   Offence[] @ignore
-  Order     Order[]   @ignore
+  offences  offence[]
+  orders    order[]
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model Review {
-  rating  Int
-  text    String @db.VarChar(255)
+model review {
+  id     Int    @id @default(autoincrement())
+  rating Int
+  text   String @db.VarChar(255)
+
   book_id Int
   user_id Int
-  Book    Book   @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_book_id_foreign")
-  User    User   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_user_id_foreign")
 
-  @@ignore
+  book book @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_book_id_foreign")
+  user user @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_user_id_foreign")
 }
 
-model Role {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(255)
-  User User[]
+model style {
+  id    Int    @id @default(autoincrement())
+  name  String @unique @db.VarChar(255)
+  books book[]
 }
 
-model Style {
-  id         Int          @id
-  name       String       @db.VarChar(255)
-  style_book style_book[] @ignore
+model user {
+  id        Int     @id @default(autoincrement())
+  name      String  @unique @db.VarChar(255)
+  email     String  @unique @db.VarChar(255)
+  password  String  @db.VarChar(255)
+  firstName String? @db.VarChar(255)
+  lastName  String? @db.VarChar(255)
+
+  role       RoleEnum  @default(USER)
+  likedBooks book[]
+  offences   offence[]
+  orders     order[]
+  reviews    review[]
+  token      token[]
 }
 
-model User {
-  id       Int       @id @default(autoincrement())
-  name     String    @db.VarChar(255)
-  email    String    @db.VarChar(255)
-  password String    @db.VarChar(255)
-  role     Int       @default(0)
-  Role     Role      @relation(fields: [role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_role_foreign")
-  Liked    Liked[]   @ignore
-  Offence  Offence[] @ignore
-  Order    Order[]   @ignore
-  Review   Review[]  @ignore
+model token {
+  refreshToken String @unique
+  user_id      Int
+  user         user   @relation(fields: [user_id], references: [id])
+
+  @@id([user_id])
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model author_book {
-  author_id Int
-  book_id   Int
-  Author    Author @relation(fields: [author_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "author_book_author_id_foreign")
-  Book      Book   @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "author_book_book_id_foreign")
-
-  @@ignore
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model style_book {
-  style_id Int
-  book_id  Int
-  Book     Book  @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "style_book_book_id_foreign")
-  Style    Style @relation(fields: [style_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "style_book_style_id_foreign")
-
-  @@ignore
+enum RoleEnum {
+  USER
+  ADMIN
 }
