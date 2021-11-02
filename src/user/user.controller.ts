@@ -22,6 +22,7 @@ export class UserController {
     @UseGuards(RolesGuard)
     @Get("/all")
     getAll() {
+        console.log(process.env.JWT_ACCESS_SECRET)
         return this.userService.getAll()
     }
 }
