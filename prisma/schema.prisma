@@ -46,11 +46,11 @@ model Book {
 model Offence {
   id Int @id @default(autoincrement())
 
-  user_id Int
-  real_id Int
+  userId Int
+  realId Int
 
-  real Real @relation(fields: [real_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "offence_real_id_foreign")
-  user User @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "offence_user_id_foreign")
+  real Real @relation(fields: [realId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 
   date        DateTime @db.Date
   description String   @db.VarChar(255)
@@ -61,10 +61,10 @@ model Offence {
 model Order {
   id Int @id @default(autoincrement())
 
-  real_id Int
-  user_id Int
-  real    Real @relation(fields: [real_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_real_id_foreign")
-  user    User @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_user_id_foreign")
+  realId Int
+  userId Int
+  real    Real @relation(fields: [realId], references: [id])
+  user    User @relation(fields: [userId], references: [id])
 
   return_date DateTime @db.Date
 }
@@ -77,8 +77,8 @@ model Publisher {
 
 model Real {
   id        Int       @id @default(autoincrement())
-  book_id   Int
-  book      Book      @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "real_book_id_foreign")
+  bookId   Int
+  book      Book      @relation(fields: [bookId], references: [id])
   available Boolean
   offences  Offence[]
   orders    Order[]
@@ -90,11 +90,11 @@ model Review {
   rating Int
   text   String @db.VarChar(255)
 
-  book_id Int
-  user_id Int
+  bookId Int
+  userId Int
 
-  book Book @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_book_id_foreign")
-  user User @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_user_id_foreign")
+  book Book @relation(fields: [bookId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Style {
@@ -121,10 +121,10 @@ model User {
 
 model Token {
   refreshToken String @unique
-  user_id      Int
-  user         User   @relation(fields: [user_id], references: [id])
+  userId       Int
+  user         User   @relation(fields: [userId], references: [id])
 
-  @@id([user_id])
+  @@id([userId])
 }
 
 enum RoleEnum {
