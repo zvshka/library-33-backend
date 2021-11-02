@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+//generator prismaClassGenerator {
+//    provider   = "prisma-class-generator"
+//    useSwagger = true
+//    dryRun     = false
+//    output     = "../src/DTO/"
+//}
+
+//generator docs {
+//  provider = "node node_modules/prisma-docs-generator"
+//}
+//
+//generator dbml {
+//  provider = "prisma-dbml-generator"
+//}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Author {
+  id    Int    @id @default(autoincrement())
+  name  String @unique @db.VarChar(255)
+  books Book[]
+}
+
+model Book {
+  id    Int    @id @default(autoincrement())
+  title String @db.VarChar(255)
+
+  publisher   Publisher @relation(fields: [publisherId], references: [id])
+  publisherId Int
+
+  real    Real[]
+  reviews Review[]
+  authors Author[]
+  styles  Style[]
+  likes   User[]
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model Offence {
+  id Int @id @default(autoincrement())
+
+  user_id Int
+  real_id Int
+
+  real Real @relation(fields: [real_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "offence_real_id_foreign")
+  user User @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "offence_user_id_foreign")
+
+  date        DateTime @db.Date
+  description String   @db.VarChar(255)
+  expire      DateTime @db.Date
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model Order {
+  id Int @id @default(autoincrement())
+
+  real_id Int
+  user_id Int
+  real    Real @relation(fields: [real_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_real_id_foreign")
+  user    User @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_user_id_foreign")
+
+  return_date DateTime @db.Date
+}
+
+model Publisher {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(255)
+  books Book[]
+}
+
+model Real {
+  id        Int       @id @default(autoincrement())
+  book_id   Int
+  book      Book      @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "real_book_id_foreign")
+  available Boolean
+  offences  Offence[]
+  orders    Order[]
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model Review {
+  id     Int    @id @default(autoincrement())
+  rating Int
+  text   String @db.VarChar(255)
+
+  book_id Int
+  user_id Int
+
+  book Book @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_book_id_foreign")
+  user User @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_user_id_foreign")
+}
+
+model Style {
+  id    Int    @id @default(autoincrement())
+  name  String @unique @db.VarChar(255)
+  books Book[]
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  name      String  @db.VarChar(255)
+  email     String  @unique @db.VarChar(255)
+  password  String  @db.VarChar(255)
+  firstName String? @db.VarChar(255)
+  lastName  String? @db.VarChar(255)
+
+  role       RoleEnum  @default(USER)
+  likedBooks Book[]
+  offences   Offence[]
+  orders     Order[]
+  reviews    Review[]
+  token      Token[]
+}
+
+model Token {
+  refreshToken String @unique
+  user_id      Int
+  user         User   @relation(fields: [user_id], references: [id])
+
+  @@id([user_id])
+}
+
+enum RoleEnum {
+  USER
+  ADMIN
+}
