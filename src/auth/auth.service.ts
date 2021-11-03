@@ -1,13 +1,13 @@
 import {HttpException, Injectable, UnauthorizedException} from '@nestjs/common';
 import {LoginDTO} from "./DTO/LoginDTO";
 import {CreateUserDTO} from "./DTO/CreateUserDTO";
-import {UserService} from "../user/user.service";
+import {UsersService} from "../users/users.service";
 import {hash, compare} from "bcrypt"
 import {TokensService} from "./tokens.service";
 
 @Injectable()
 export class AuthService {
-    constructor(private userService: UserService,
+    constructor(private usersService: UsersService,
                 private tokensService: TokensService) {
     }
 
@@ -19,12 +19,12 @@ export class AuthService {
     }
 
     async registration(userDTO: CreateUserDTO) {
-        const candidate = await this.userService.getUserByEmail(userDTO.email)
+        const candidate = await this.usersService.findByEmail(userDTO.email)
         if (candidate) {
             throw new HttpException("Пользователь с таким email уже существует", 400)
         }
         const hashPassword = await hash(userDTO.password, 5)
-        const user = await this.userService.createUser({...userDTO, password: hashPassword})
+        const user = await this.usersService.create({...userDTO, password: hashPassword})
         const tokens = this.tokensService.generateToken(user)
         await this.tokensService.saveToken(user.id, tokens.refreshToken)
         return {...tokens, user}
@@ -42,14 +42,14 @@ export class AuthService {
             throw new UnauthorizedException({message: "Нет refresh токена"})
         }
 
-        const user = await this.userService.getUserByEmail(userData.email)
+        const user = await this.usersService.findByEmail(userData.email)
         const tokens = this.tokensService.generateToken(user)
         await this.tokensService.saveToken(user.id, tokens.refreshToken)
         return {...tokens, user}
     }
 
     private async validateUser(userDTO: LoginDTO) {
-        const user = await this.userService.getUserByEmail(userDTO.email)
+        const user = await this.usersService.findByEmail(userDTO.email)
         if (user) {
             const passwordEquals = await compare(userDTO.password, user.password)
             if (passwordEquals) {

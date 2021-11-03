@@ -1,1 +1,4 @@
-export class Style {}
+export class Style {
+    id: number
+    name: string
+}

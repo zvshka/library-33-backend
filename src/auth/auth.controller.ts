@@ -10,7 +10,11 @@ export class AuthController {
     constructor(private authService: AuthService) {
     }
 
-    @ApiOperation({summary: "Войти в систему", tags: ["Авторизация"]})
+    @ApiOperation({
+        summary: "Войти в систему",
+        description: "При успешной авторизации возвращаются данные пользователя и 2 токена: accessToken и refreshToke. Первый нужен для доступа к API, а второй для обновления первого",
+        tags: ["Авторизация"]
+    })
     @Post("/login")
     login(@Body() userDTO: LoginDTO) {
         return this.authService.login(userDTO)

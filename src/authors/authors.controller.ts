@@ -1,34 +1,59 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { AuthorsService } from './authors.service';
-import { CreateAuthorDto } from './dto/create-author.dto';
-import { UpdateAuthorDto } from './dto/update-author.dto';
+import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards} from '@nestjs/common';
+import {AuthorsService} from './authors.service';
+import {CreateAuthorDto} from './dto/create-author.dto';
+import {UpdateAuthorDto} from './dto/update-author.dto';
+import {Roles} from "../auth/roles-auth.decorator";
+import {RolesGuard} from "../auth/roles.guard";
+import {ApiOperation} from "@nestjs/swagger";
 
 @Controller('authors')
 export class AuthorsController {
-  constructor(private readonly authorsService: AuthorsService) {}
+    constructor(private readonly authorsService: AuthorsService) {
+    }
 
-  @Post()
-  create(@Body() createAuthorDto: CreateAuthorDto) {
-    return this.authorsService.create(createAuthorDto);
-  }
+    @ApiOperation({
+        summary: "Создать нового автора",
+        security: [{bearer: []}],
+        tags: ["Авторы"]
+    })
+    @Roles("ADMIN")
+    @UseGuards(RolesGuard)
+    @Post()
+    create(@Body() createAuthorDto: CreateAuthorDto) {
+        return this.authorsService.create(createAuthorDto);
+    }
 
-  @Get()
-  findAll() {
-    return this.authorsService.findAll();
-  }
+    @ApiOperation({
+        summary: "Получить всех авторов",
+        security: [{bearer: []}],
+        tags: ["Авторы"]
+    })
+    @Get()
+    findAll() {
+        return this.authorsService.findAll();
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authorsService.findOne(+id);
-  }
+    @ApiOperation({
+        tags: ["Авторы"]
+    })
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.authorsService.findOne(+id);
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthorDto: UpdateAuthorDto) {
-    return this.authorsService.update(+id, updateAuthorDto);
-  }
+    @ApiOperation({
+        tags: ["Авторы"]
+    })
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateAuthorDto: UpdateAuthorDto) {
+        return this.authorsService.update(+id, updateAuthorDto);
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authorsService.remove(+id);
-  }
+    @ApiOperation({
+        tags: ["Авторы"]
+    })
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.authorsService.remove(+id);
+    }
 }
