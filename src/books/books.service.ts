@@ -1,15 +1,44 @@
 import {Injectable} from '@nestjs/common';
 import {CreateBookDto} from './dto/create-book.dto';
 import {UpdateBookDto} from './dto/update-book.dto';
+import {PrismaService} from "../prisma/prisma.service";
 
 @Injectable()
 export class BooksService {
-    create(createBookDto: CreateBookDto) {
-        return 'This action adds a new book';
+    constructor(private prisma: PrismaService) {
     }
 
-    findAll() {
-        return `This action returns all books`;
+    async create(createBookDto: CreateBookDto) {
+        return await this.prisma.book.create({
+            data: {
+                title: createBookDto.title,
+                publisher: {
+                    connect: {
+                        id: createBookDto.publisher
+                    }
+                },
+                styles: {
+                    connect: [
+                        ...createBookDto.styles.map(id => ({id}))
+                    ]
+                },
+                authors: {
+                    connect: [
+                        ...createBookDto.authors.map(id => ({id}))
+                    ]
+                }
+            }
+        })
+    }
+
+    async findAll() {
+        return await this.prisma.book.findMany({
+            include: {
+                publisher: true,
+                authors: true,
+                styles: true
+            }
+        })
     }
 
     findOne(id: number) {

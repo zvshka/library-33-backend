@@ -15,8 +15,8 @@ export class StylesService {
         })
     }
 
-    findAll() {
-        return `This action returns all styles`;
+    async findAll() {
+        return await this.prisma.style.findMany()
     }
 
     findOne(id: number) {

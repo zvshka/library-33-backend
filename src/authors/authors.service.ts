@@ -14,8 +14,8 @@ export class AuthorsService {
         })
     }
 
-    findAll() {
-        return `This action returns all authors`;
+    async findAll() {
+        return await this.prisma.author.findMany()
     }
 
     findOne(id: number) {

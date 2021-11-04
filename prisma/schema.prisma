@@ -24,13 +24,15 @@ datasource db {
 
 model Author {
   id    Int    @id @default(autoincrement())
-  name  String @unique @db.VarChar(255)
+  name  String @unique @db.VarChar(70)
   books Book[]
 }
 
 model Book {
   id    Int    @id @default(autoincrement())
-  title String @db.VarChar(255)
+  title String @db.VarChar(70)
+
+  description String? @db.VarChar(120)
 
   publisher   Publisher @relation(fields: [publisherId], references: [id])
   publisherId Int
@@ -99,17 +101,17 @@ model Review {
 
 model Style {
   id    Int    @id @default(autoincrement())
-  name  String @unique @db.VarChar(255)
+  name  String @unique @db.VarChar(40)
   books Book[]
 }
 
 model User {
   id        Int     @id @default(autoincrement())
-  name      String  @db.VarChar(255)
-  email     String  @unique @db.VarChar(255)
-  password  String  @db.VarChar(255)
-  firstName String? @db.VarChar(255)
-  lastName  String? @db.VarChar(255)
+  name      String  @db.VarChar(20)
+  email     String  @unique @db.VarChar(40)
+  password  String  @db.VarChar(128)
+  firstName String? @db.VarChar(30)
+  lastName  String? @db.VarChar(30)
 
   role       RoleEnum  @default(USER)
   likedBooks Book[]
