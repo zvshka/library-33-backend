@@ -21,7 +21,21 @@ export class UsersService {
         })
     }
 
-    async findAll(): Promise<User[]> {
+    async findAll() {
         return await this.prisma.user.findMany();
+    }
+
+    async aboutMe(userId) {
+        return await this.prisma.user.findUnique({
+            where: {
+                id: userId
+            },
+            include: {
+                orders: true,
+                likedBooks: true,
+                reviews: true,
+                offences: true
+            }
+        })
     }
 }

@@ -1,9 +1,10 @@
-import {Controller, Get, Patch, UseGuards} from '@nestjs/common';
+import {Controller, Get, Patch, Req, UseGuards} from '@nestjs/common';
 import {UsersService} from './users.service';
 import {Roles} from "../auth/roles-auth.decorator";
 import {RolesGuard} from "../auth/roles.guard";
 import {ApiOperation, ApiResponse} from "@nestjs/swagger";
 import {User} from "./entities/user.entity";
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
 @Controller('users')
 export class UsersController {
@@ -25,9 +26,10 @@ export class UsersController {
         security: [{bearer: []}],
         tags: ["Пользователь"],
     })
+    @UseGuards(JwtAuthGuard)
     @Get("/@me")
-    aboutMe() {
-
+    aboutMe(@Req() request) {
+        return this.usersService.aboutMe(request.user.id)
     }
 
     @ApiOperation({
@@ -41,7 +43,7 @@ export class UsersController {
     @Roles("ADMIN")
     @UseGuards(RolesGuard)
     @Get()
-    findAll(): Promise<User[]> {
+    findAll() {
         return this.usersService.findAll();
     }
 }

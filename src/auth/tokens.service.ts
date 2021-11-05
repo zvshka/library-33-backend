@@ -27,7 +27,7 @@ export class TokensService {
         })
     }
 
-    generateToken(user: User) {
+    generateToken(user) {
         const payload = {email: user.email, id: user.id, role: user.role, name: user.name}
         const accessToken = this.jwtService.sign(payload)
         const refreshToken = this.jwtService.sign(payload, {secret: process.env.JWT_REFRESH_SECRET, expiresIn: "30d"})

@@ -114,6 +114,7 @@ model User {
   lastName  String? @db.VarChar(30)
 
   role       RoleEnum  @default(USER)
+  secret     String?   @db.Uuid @default(uuid())
   likedBooks Book[]
   offences   Offence[]
   orders     Order[]
