@@ -1,8 +1,8 @@
-import {Controller, Post, Body} from '@nestjs/common';
-import {LoginDTO} from "./DTO/LoginDTO";
-import {CreateUserDTO} from "./DTO/CreateUserDTO";
+import {Body, Controller, Post} from '@nestjs/common';
+import {LoginDto} from "./dto/login.dto"
+import {RegisterDto} from "./dto/register.dto";
+import {RefreshDto} from "./dto/refresh.dto";
 import {AuthService} from "./auth.service";
-import {RefreshDTO} from "./DTO/RefreshDTO";
 import {ApiOperation} from "@nestjs/swagger";
 
 @Controller('auth')
@@ -16,19 +16,19 @@ export class AuthController {
         tags: ["Авторизация"]
     })
     @Post("/login")
-    login(@Body() userDTO: LoginDTO) {
-        return this.authService.login(userDTO)
+    login(@Body() loginDto: LoginDto) {
+        return this.authService.login(loginDto)
     }
 
     @ApiOperation({summary: "Зарегистрироваться в системе", tags: ["Авторизация"]})
     @Post("/register")
-    registration(@Body() userDTO: CreateUserDTO) {
-        return this.authService.registration(userDTO)
+    registration(@Body() registerDto: RegisterDto) {
+        return this.authService.registration(registerDto)
     }
 
     @ApiOperation({summary: "Обновить токены в базе данных", tags: ["Авторизация"]})
     @Post("/refresh")
-    refresh(@Body() body: RefreshDTO) {
-        return this.authService.refresh(body.refreshToken)
+    refresh(@Body() refreshDto: RefreshDto) {
+        return this.authService.refresh(refreshDto.refreshToken)
     }
 }

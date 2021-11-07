@@ -1,6 +1,5 @@
 import {Injectable} from '@nestjs/common';
 import {PrismaService} from "../prisma/prisma.service";
-import {User} from "./entities/user.entity";
 
 @Injectable()
 export class UsersService {
@@ -21,12 +20,20 @@ export class UsersService {
         })
     }
 
+    async findById(userId) {
+        return await this.prisma.user.findUnique({
+            where: {
+                id: userId
+            }
+        })
+    }
+
     async findAll() {
         return await this.prisma.user.findMany();
     }
 
     async aboutMe(userId) {
-        return await this.prisma.user.findUnique({
+        const user = await this.prisma.user.findUnique({
             where: {
                 id: userId
             },
@@ -37,5 +44,8 @@ export class UsersService {
                 offences: true
             }
         })
+        delete user.secret
+        delete user.password
+        return user
     }
 }

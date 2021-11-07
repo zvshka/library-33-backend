@@ -8,7 +8,7 @@ import {PrismaService} from "../prisma/prisma.service";
     controllers: [BooksController],
     providers: [BooksService, PrismaService],
     imports: [
-        forwardRef(() => AuthModule)
+        forwardRef(() => AuthModule),
     ]
 })
 export class BooksModule {

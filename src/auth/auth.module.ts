@@ -4,7 +4,7 @@ import {AuthController} from './auth.controller';
 import {UsersModule} from "../users/users.module";
 import {JwtModule} from "@nestjs/jwt";
 import {PrismaService} from "../prisma/prisma.service";
-import { TokensService } from './tokens.service';
+import {TokensService} from './tokens.service';
 
 @Module({
     providers: [AuthService, PrismaService, TokensService],
@@ -19,6 +19,7 @@ import { TokensService } from './tokens.service';
         })],
     exports: [
         AuthService,
+        TokensService,
         JwtModule
     ]
 })

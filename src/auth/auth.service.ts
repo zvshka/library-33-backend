@@ -1,9 +1,9 @@
-import {HttpException, Injectable, UnauthorizedException} from '@nestjs/common';
-import {LoginDTO} from "./DTO/LoginDTO";
-import {CreateUserDTO} from "./DTO/CreateUserDTO";
+import {HttpException, HttpStatus, Injectable, UnauthorizedException} from '@nestjs/common';
 import {UsersService} from "../users/users.service";
 import {hash, compare} from "bcrypt"
 import {TokensService} from "./tokens.service";
+import {LoginDto} from "./dto/login.dto";
+import {RegisterDto} from "./dto/register.dto";
 
 @Injectable()
 export class AuthService {
@@ -11,22 +11,26 @@ export class AuthService {
                 private tokensService: TokensService) {
     }
 
-    async login(userDTO: LoginDTO) {
-        const user = await this.validateUser(userDTO)
+    async login(loginDto: LoginDto) {
+        const user = await this.validateUser(loginDto)
         const tokens = this.tokensService.generateToken(user)
         await this.tokensService.saveToken(user.id, tokens.refreshToken)
+        delete user.secret
+        delete user.password
         return {...tokens, user}
     }
 
-    async registration(userDTO: CreateUserDTO) {
-        const candidate = await this.usersService.findByEmail(userDTO.email)
+    async registration(registerDto: RegisterDto) {
+        const candidate = await this.usersService.findByEmail(registerDto.email)
         if (candidate) {
-            throw new HttpException("Пользователь с таким email уже существует", 400)
+            throw new HttpException("Пользователь с таким email уже существует", HttpStatus.BAD_REQUEST)
         }
-        const hashPassword = await hash(userDTO.password, 5)
-        const user = await this.usersService.create({...userDTO, password: hashPassword})
+        const hashPassword = await hash(registerDto.password, 5)
+        const user = await this.usersService.create({...registerDto, password: hashPassword})
         const tokens = this.tokensService.generateToken(user)
         await this.tokensService.saveToken(user.id, tokens.refreshToken)
+        delete user.secret
+        delete user.password
         return {...tokens, user}
     }
 
@@ -45,13 +49,15 @@ export class AuthService {
         const user = await this.usersService.findByEmail(userData.email)
         const tokens = this.tokensService.generateToken(user)
         await this.tokensService.saveToken(user.id, tokens.refreshToken)
+        delete user.secret
+        delete user.password
         return {...tokens, user}
     }
 
-    private async validateUser(userDTO: LoginDTO) {
-        const user = await this.usersService.findByEmail(userDTO.email)
+    private async validateUser(loginDto: LoginDto) {
+        const user = await this.usersService.findByEmail(loginDto.email)
         if (user) {
-            const passwordEquals = await compare(userDTO.password, user.password)
+            const passwordEquals = await compare(loginDto.password, user.password)
             if (passwordEquals) {
                 return user
             }

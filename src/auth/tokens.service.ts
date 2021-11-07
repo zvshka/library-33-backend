@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {PrismaService} from "../prisma/prisma.service";
 import {JwtService} from "@nestjs/jwt";
-import {User} from "../users/entities/user.entity";
 
 @Injectable()
 export class TokensService {
@@ -28,7 +27,7 @@ export class TokensService {
     }
 
     generateToken(user) {
-        const payload = {email: user.email, id: user.id, role: user.role, name: user.name}
+        const payload = {id: user.id, secret: user.secret}
         const accessToken = this.jwtService.sign(payload)
         const refreshToken = this.jwtService.sign(payload, {secret: process.env.JWT_REFRESH_SECRET, expiresIn: "30d"})
         return {accessToken, refreshToken}

@@ -3,8 +3,9 @@ import {UsersService} from './users.service';
 import {Roles} from "../auth/roles-auth.decorator";
 import {RolesGuard} from "../auth/roles.guard";
 import {ApiOperation, ApiResponse} from "@nestjs/swagger";
-import {User} from "./entities/user.entity";
+import {User as UserEntity} from "./entities/user.entity";
 import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {User} from "../auth/user.decorator";
 
 @Controller('users')
 export class UsersController {
@@ -28,8 +29,8 @@ export class UsersController {
     })
     @UseGuards(JwtAuthGuard)
     @Get("/@me")
-    aboutMe(@Req() request) {
-        return this.usersService.aboutMe(request.user.id)
+    aboutMe(@User() user) {
+        return this.usersService.aboutMe(user.id)
     }
 
     @ApiOperation({
@@ -38,7 +39,7 @@ export class UsersController {
         tags: ["Пользователь"],
     })
     @ApiResponse({
-        type: [User]
+        type: [UserEntity]
     })
     @Roles("ADMIN")
     @UseGuards(RolesGuard)

@@ -1,24 +1,18 @@
-import {
-    CanActivate,
-    ExecutionContext,
-    HttpException,
-    HttpStatus,
-    Injectable,
-    UnauthorizedException
-} from "@nestjs/common";
-import {Observable} from "rxjs";
-import {JwtService} from "@nestjs/jwt";
+import {CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable, UnauthorizedException} from "@nestjs/common";
 import {Reflector} from "@nestjs/core";
 import {ROLES_KEY} from "./roles-auth.decorator";
+import {TokensService} from "./tokens.service";
+import {UsersService} from "../users/users.service";
 
 @Injectable()
 export class RolesGuard implements CanActivate {
 
-    constructor(private jwtService: JwtService,
+    constructor(private tokensService: TokensService,
+                private usersService: UsersService,
                 private reflector: Reflector) {
     }
 
-    canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+    canActivate(context: ExecutionContext) {
         const req = context.switchToHttp().getRequest()
         try {
             const requiredRoles: string[] = this.reflector.getAllAndOverride(ROLES_KEY, [
@@ -33,7 +27,7 @@ export class RolesGuard implements CanActivate {
             if (tokenType !== "Bearer" || !token) {
                 throw new UnauthorizedException({message: "Пользователь не авторизован"})
             }
-            req.user = this.jwtService.verify(token)
+            req.user = this.tokensService.validateAccessToken(token)
             return requiredRoles.includes(req.user.role)
         } catch (e) {
             throw new HttpException("Нет доступа", HttpStatus.FORBIDDEN)
