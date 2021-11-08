@@ -18,8 +18,15 @@ export class AuthorsService {
         return await this.prisma.author.findMany()
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} author`;
+    async findOne(id: number) {
+        return await this.prisma.author.findUnique({
+            where: {
+                id
+            },
+            include: {
+                books: true
+            }
+        })
     }
 
     update(id: number, updateAuthorDto: UpdateAuthorDto) {

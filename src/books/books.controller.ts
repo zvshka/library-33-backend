@@ -5,6 +5,7 @@ import {UpdateBookDto} from './dto/update-book.dto';
 import {ApiOperation} from "@nestjs/swagger";
 import {Roles} from "../auth/roles-auth.decorator";
 import {RolesGuard} from "../auth/roles.guard";
+import {Auth} from "../auth/auth.decorator";
 
 @Controller('books')
 export class BooksController {
@@ -16,8 +17,7 @@ export class BooksController {
         security: [{bearer: []}],
         tags: ["Книги"]
     })
-    @Roles("ADMIN")
-    @UseGuards(RolesGuard)
+    @Auth("ADMIN")
     @Post()
     create(@Body() createBookDto: CreateBookDto) {
         return this.booksService.create(createBookDto);

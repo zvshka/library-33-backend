@@ -5,6 +5,7 @@ import {UpdatePublisherDto} from './dto/update-publisher.dto';
 import {ApiOperation} from "@nestjs/swagger";
 import {Roles} from "../auth/roles-auth.decorator";
 import {RolesGuard} from "../auth/roles.guard";
+import {Auth} from "../auth/auth.decorator";
 
 @Controller('publishers')
 export class PublishersController {
@@ -16,8 +17,7 @@ export class PublishersController {
         security: [{bearer: []}],
         tags: ["Издатели"]
     })
-    @Roles("ADMIN")
-    @UseGuards(RolesGuard)
+    @Auth("ADMIN")
     @Post()
     create(@Body() createPublisherDto: CreatePublisherDto) {
         return this.publishersService.create(createPublisherDto);

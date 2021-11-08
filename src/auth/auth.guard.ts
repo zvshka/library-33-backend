@@ -3,7 +3,7 @@ import {TokensService} from "./tokens.service";
 import {UsersService} from "../users/users.service";
 
 @Injectable()
-export class JwtAuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate {
 
     constructor(private tokensService: TokensService,
                 private usersService: UsersService) {

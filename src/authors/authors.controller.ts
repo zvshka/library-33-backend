@@ -2,9 +2,8 @@ import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards} from '@nes
 import {AuthorsService} from './authors.service';
 import {CreateAuthorDto} from './dto/create-author.dto';
 import {UpdateAuthorDto} from './dto/update-author.dto';
-import {Roles} from "../auth/roles-auth.decorator";
-import {RolesGuard} from "../auth/roles.guard";
 import {ApiOperation} from "@nestjs/swagger";
+import {Auth} from "../auth/auth.decorator";
 
 @Controller('authors')
 export class AuthorsController {
@@ -16,8 +15,7 @@ export class AuthorsController {
         security: [{bearer: []}],
         tags: ["Авторы"]
     })
-    @Roles("ADMIN")
-    @UseGuards(RolesGuard)
+    @Auth("ADMIN")
     @Post()
     create(@Body() createAuthorDto: CreateAuthorDto) {
         return this.authorsService.create(createAuthorDto);

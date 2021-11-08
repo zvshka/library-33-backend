@@ -5,6 +5,7 @@ import {UpdateStyleDto} from './dto/update-style.dto';
 import {ApiOperation} from "@nestjs/swagger";
 import {Roles} from "../auth/roles-auth.decorator";
 import {RolesGuard} from "../auth/roles.guard";
+import {Auth} from "../auth/auth.decorator";
 
 @Controller('styles')
 export class StylesController {
@@ -16,8 +17,7 @@ export class StylesController {
         security: [{bearer: []}],
         tags: ["Жанры"]
     })
-    @Roles("ADMIN")
-    @UseGuards(RolesGuard)
+    @Auth("ADMIN")
     @Post()
     create(@Body() createStyleDto: CreateStyleDto) {
         return this.stylesService.create(createStyleDto);

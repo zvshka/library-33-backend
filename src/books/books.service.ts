@@ -12,6 +12,7 @@ export class BooksService {
         return await this.prisma.book.create({
             data: {
                 title: createBookDto.title,
+                description: createBookDto.description,
                 publisher: {
                     connect: {
                         id: createBookDto.publisher
@@ -42,7 +43,15 @@ export class BooksService {
     }
 
     findOne(id: number) {
-        return `This action returns a #${id} book`;
+        return this.prisma.book.findUnique({
+            where: {id},
+            include: {
+                real: true,
+                reviews: true,
+                authors: true,
+                styles: true
+            }
+        })
     }
 
     update(id: number, updateBookDto: UpdateBookDto) {

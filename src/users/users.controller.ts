@@ -1,11 +1,10 @@
-import {Controller, Get, Patch, Req, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Patch} from '@nestjs/common';
 import {UsersService} from './users.service';
-import {Roles} from "../auth/roles-auth.decorator";
-import {RolesGuard} from "../auth/roles.guard";
 import {ApiOperation, ApiResponse} from "@nestjs/swagger";
 import {User as UserEntity} from "./entities/user.entity";
-import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 import {User} from "../auth/user.decorator";
+import {Auth} from "../auth/auth.decorator";
+import {UpdateDto} from "./dto/update.dto";
 
 @Controller('users')
 export class UsersController {
@@ -17,9 +16,10 @@ export class UsersController {
         security: [{bearer: []}],
         tags: ["Пользователь"],
     })
+    @Auth()
     @Patch("/@me")
-    updateMe() {
-
+    updateMe(@User() user: UserEntity, @Body() updateDto: UpdateDto) {
+        return this.usersService.updateMe(user.id, updateDto)
     }
 
     @ApiOperation({
@@ -27,9 +27,9 @@ export class UsersController {
         security: [{bearer: []}],
         tags: ["Пользователь"],
     })
-    @UseGuards(JwtAuthGuard)
+    @Auth()
     @Get("/@me")
-    aboutMe(@User() user) {
+    aboutMe(@User() user: UserEntity) {
         return this.usersService.aboutMe(user.id)
     }
 
@@ -41,8 +41,7 @@ export class UsersController {
     @ApiResponse({
         type: [UserEntity]
     })
-    @Roles("ADMIN")
-    @UseGuards(RolesGuard)
+    @Auth("ADMIN")
     @Get()
     findAll() {
         return this.usersService.findAll();
