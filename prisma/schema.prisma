@@ -44,7 +44,6 @@ model Book {
   likes   User[]
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model Offence {
   id Int @id @default(autoincrement())
 
@@ -59,7 +58,6 @@ model Offence {
   expire      DateTime @db.Date
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model Order {
   id Int @id @default(autoincrement())
 
@@ -86,7 +84,6 @@ model Real {
   orders    Order[]
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model Review {
   id     Int    @id @default(autoincrement())
   rating Int
@@ -122,14 +119,16 @@ model User {
   token      Token[]
 }
 
+enum RoleEnum {
+  USER
+  ADMIN
+}
+
+
 model Token {
   refreshToken String @unique
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
-}
-
-enum RoleEnum {
-  USER
-  ADMIN
+  @@id([userId])
 }

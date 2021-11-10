@@ -2,6 +2,7 @@ import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
 import {PrismaService} from './prisma/prisma.service';
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
+import {ValidationPipe} from "./auth/validation.pipe";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
