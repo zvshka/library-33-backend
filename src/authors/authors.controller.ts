@@ -3,7 +3,7 @@ import {AuthorsService} from './authors.service';
 import {CreateAuthorDto} from './dto/create-author.dto';
 import {UpdateAuthorDto} from './dto/update-author.dto';
 import {ApiOperation} from "@nestjs/swagger";
-import {Auth} from "../auth/auth.decorator";
+import {Auth} from "../auth/decorators/auth.decorator";
 
 @Controller('authors')
 export class AuthorsController {

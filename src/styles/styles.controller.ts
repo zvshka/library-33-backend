@@ -3,9 +3,9 @@ import {StylesService} from './styles.service';
 import {CreateStyleDto} from './dto/create-style.dto';
 import {UpdateStyleDto} from './dto/update-style.dto';
 import {ApiOperation} from "@nestjs/swagger";
-import {Roles} from "../auth/roles-auth.decorator";
-import {RolesGuard} from "../auth/roles.guard";
-import {Auth} from "../auth/auth.decorator";
+import {Roles} from "../auth/decorators/roles-auth.decorator";
+import {RolesGuard} from "../auth/guards/roles.guard";
+import {Auth} from "../auth/decorators/auth.decorator";
 
 @Controller('styles')
 export class StylesController {

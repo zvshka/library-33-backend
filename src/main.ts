@@ -2,7 +2,9 @@ import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
 import {PrismaService} from './prisma/prisma.service';
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
-import {ValidationPipe} from "./auth/validation.pipe";
+import { PrismaSessionStore } from '@quixo3/prisma-session-store';
+import * as session from "express-session"
+import {ValidationPipe} from "./auth/class-valiadtion.pipe";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -21,6 +23,28 @@ async function bootstrap() {
 
     const prismaService: PrismaService = app.get(PrismaService);
     await prismaService.enableShutdownHooks(app)
+
+    app.useGlobalPipes(new ValidationPipe())
+
+    app.use(
+        session({
+            cookie: {
+                maxAge: 7 * 24 * 60 * 60 * 1000 // ms
+            },
+            secret: 'topsecretcode',
+            resave: true,
+            saveUninitialized: true,
+            store: new PrismaSessionStore(
+                prismaService,
+                {
+                    checkPeriod: 2 * 60 * 1000,  //ms
+                    dbRecordIdIsSessionId: true,
+                    dbRecordIdFunction: undefined,
+                }
+            )
+        })
+    );
+
     await app.listen(3000);
 }
 

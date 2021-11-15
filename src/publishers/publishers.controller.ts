@@ -3,9 +3,9 @@ import {PublishersService} from './publishers.service';
 import {CreatePublisherDto} from './dto/create-publisher.dto';
 import {UpdatePublisherDto} from './dto/update-publisher.dto';
 import {ApiOperation} from "@nestjs/swagger";
-import {Roles} from "../auth/roles-auth.decorator";
-import {RolesGuard} from "../auth/roles.guard";
-import {Auth} from "../auth/auth.decorator";
+import {Roles} from "../auth/decorators/roles-auth.decorator";
+import {RolesGuard} from "../auth/guards/roles.guard";
+import {Auth} from "../auth/decorators/auth.decorator";
 
 @Controller('publishers')
 export class PublishersController {
