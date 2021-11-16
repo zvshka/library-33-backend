@@ -1,6 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../prisma/prisma.service";
 import {UpdateDto} from "./dto/update.dto";
+import {UserEntity} from "./entities/user.entity";
 
 @Injectable()
 export class UsersService {
@@ -48,7 +49,7 @@ export class UsersService {
             }
         });
 
-        return user;
+        return new UserEntity(user);
     }
 
     async updateMe(userId, updateDto: UpdateDto) {

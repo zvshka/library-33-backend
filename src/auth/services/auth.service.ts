@@ -1,4 +1,4 @@
-import {HttpException, HttpStatus, Injectable, UnauthorizedException} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable, Request, UnauthorizedException} from '@nestjs/common';
 import {UsersService} from "../../users/users.service";
 import {compare, hash} from "bcrypt"
 import {TokensService} from "./tokens.service";
@@ -6,6 +6,7 @@ import {RegisterDto} from "../dto/register.dto";
 import {UserDto} from "../dto/user.dto";
 import {LoginDto} from "../dto/login.dto";
 import {UserEntity} from "../../users/entities/user.entity";
+import {Session} from "express-session";
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,8 @@ export class AuthService {
         const user = await this.validateUser(loginDto.username, loginDto.password)
         const tokens = this.tokensService.generateToken(user)
         await this.tokensService.saveToken(user.id, tokens.refreshToken)
-        session.user = new UserEntity(user)
+        session.userId = user.id
+        // session.save(err => console.log(err))
         return {...tokens, user: new UserEntity(user)}
     }
 

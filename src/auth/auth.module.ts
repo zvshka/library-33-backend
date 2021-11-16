@@ -10,7 +10,7 @@ import {TokensService} from './services/tokens.service';
     providers: [
         AuthService,
         PrismaService,
-        TokensService
+        TokensService,
     ],
     controllers: [AuthController],
     imports: [
@@ -24,7 +24,7 @@ import {TokensService} from './services/tokens.service';
     exports: [
         AuthService,
         TokensService,
-        JwtModule
+        JwtModule,
     ]
 })
 export class AuthModule {

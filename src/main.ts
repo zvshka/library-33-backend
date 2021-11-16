@@ -2,7 +2,7 @@ import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
 import {PrismaService} from './prisma/prisma.service';
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
-import { PrismaSessionStore } from '@quixo3/prisma-session-store';
+import {PrismaSessionStore} from '@quixo3/prisma-session-store';
 import * as session from "express-session"
 import {ValidationPipe} from "./auth/class-valiadtion.pipe";
 
@@ -25,19 +25,23 @@ async function bootstrap() {
     await prismaService.enableShutdownHooks(app)
 
     app.useGlobalPipes(new ValidationPipe())
-
+    app.enableCors({
+        origin: "http://localhost:3000",
+        // preflightContinue: true
+        credentials: true
+    })
     app.use(
         session({
             cookie: {
-                maxAge: 7 * 24 * 60 * 60 * 1000 // ms
+                maxAge: 60 * 1000 // ms
             },
             secret: 'topsecretcode',
             resave: true,
-            saveUninitialized: true,
+            saveUninitialized: false,
             store: new PrismaSessionStore(
                 prismaService,
                 {
-                    checkPeriod: 2 * 60 * 1000,  //ms
+                    checkPeriod: 15 * 1000,  //ms
                     dbRecordIdIsSessionId: true,
                     dbRecordIdFunction: undefined,
                 }
@@ -45,7 +49,7 @@ async function bootstrap() {
         })
     );
 
-    await app.listen(3000);
+    await app.listen(5000);
 }
 
 bootstrap();

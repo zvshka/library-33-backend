@@ -1,4 +1,13 @@
-import {Body, ClassSerializerInterceptor, Controller, Get, Patch, Session, UseInterceptors} from "@nestjs/common";
+import {
+    Body,
+    ClassSerializerInterceptor,
+    Controller,
+    Get,
+    Patch,
+    Session,
+    UseGuards,
+    UseInterceptors
+} from "@nestjs/common";
 import {UsersService} from "./users.service";
 import {ApiOperation, ApiResponse} from "@nestjs/swagger";
 import {UserEntity} from "./entities/user.entity";
@@ -6,6 +15,7 @@ import {User} from "../auth/decorators/user.decorator";
 import {Auth} from "../auth/decorators/auth.decorator";
 import {UpdateDto} from "./dto/update.dto";
 import {SessionDto} from "./dto/session.dto";
+import {UserGuard} from "../auth/guards/user.guard";
 
 @Controller("users")
 export class UsersController {
@@ -30,8 +40,9 @@ export class UsersController {
     })
     @UseInterceptors(ClassSerializerInterceptor)
     @Get("/@me/")
-    aboutMe(@Session() session: SessionDto): UserEntity {
-        return session.user
+    @UseGuards(UserGuard)
+    aboutMe(@Session() session: SessionDto): Promise<UserEntity> {
+        return this.usersService.aboutMe(session.user.id)
     }
 
     @ApiOperation({
