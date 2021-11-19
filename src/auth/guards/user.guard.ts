@@ -8,12 +8,14 @@ export class UserGuard implements CanActivate {
 
     async canActivate(context: ExecutionContext) {
         const req = context.switchToHttp().getRequest();
-        console.log(req.session.id)
+        if (!req.session.userId) {
+            throw new UnauthorizedException()
+        }
         const user = await this.usersService.findById(req.session.userId)
         if (!user) {
             throw new UnauthorizedException()
         }
-        req.session.user = user
-        return req.session.user !== undefined;
+        req.user = user
+        return req.user !== undefined;
     }
 }

@@ -14,7 +14,6 @@ import {UserEntity} from "./entities/user.entity";
 import {User} from "../auth/decorators/user.decorator";
 import {Auth} from "../auth/decorators/auth.decorator";
 import {UpdateDto} from "./dto/update.dto";
-import {SessionDto} from "./dto/session.dto";
 import {UserGuard} from "../auth/guards/user.guard";
 
 @Controller("users")
@@ -41,8 +40,8 @@ export class UsersController {
     @UseInterceptors(ClassSerializerInterceptor)
     @Get("/@me/")
     @UseGuards(UserGuard)
-    aboutMe(@Session() session: SessionDto): Promise<UserEntity> {
-        return this.usersService.aboutMe(session.user.id)
+    aboutMe(@User() user): Promise<UserEntity> {
+        return this.usersService.aboutMe(user.id)
     }
 
     @ApiOperation({
