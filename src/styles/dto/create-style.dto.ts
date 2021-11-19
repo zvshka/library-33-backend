@@ -1,6 +1,6 @@
-import {ApiProperty} from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateStyleDto {
-    @ApiProperty({description: "Название жанра", example: "Фантастика"})
-    name: string
+  @ApiProperty({ description: 'Название жанра', example: 'Фантастика' })
+  name: string;
 }

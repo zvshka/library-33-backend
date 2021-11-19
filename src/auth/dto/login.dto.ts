@@ -1,12 +1,12 @@
-import {ApiProperty} from "@nestjs/swagger";
-import * as Joiful from "joiful";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
 export class LoginDto {
-    @ApiProperty({example: "nickname", description: "Username"})
-    @Joiful.string().required()
-    username: string;
+  @ApiProperty({ example: 'nickname', description: 'Username' })
+  @IsString({ message: 'Должно быть строкой' })
+  username: string;
 
-    @ApiProperty({example: "youshallnotpass", description: "Пароль"})
-    @Joiful.string().required()
-    password: string;
+  @ApiProperty({ example: 'youshallnotpass', description: 'Пароль' })
+  @IsString({ message: 'Должно быть строкой' })
+  password: string;
 }

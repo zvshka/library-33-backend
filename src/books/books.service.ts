@@ -1,12 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { CreateBookDto } from "./dto/create-book.dto";
-import { UpdateBookDto } from "./dto/update-book.dto";
-import { PrismaService } from "../prisma/prisma.service";
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CreateBookDto } from './dto/create-book.dto';
+import { UpdateBookDto } from './dto/update-book.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class BooksService {
-  constructor(private prisma: PrismaService) {
-  }
+  constructor(private prisma: PrismaService) {}
 
   async create(createBookDto: CreateBookDto) {
     return await this.prisma.book.create({
@@ -15,20 +14,16 @@ export class BooksService {
         description: createBookDto.description,
         publisher: {
           connect: {
-            id: createBookDto.publisher
-          }
+            id: createBookDto.publisher,
+          },
         },
         styles: {
-          connect: [
-            ...createBookDto.styles.map(id => ({ id }))
-          ]
+          connect: [...createBookDto.styles.map((id) => ({ id }))],
         },
         authors: {
-          connect: [
-            ...createBookDto.authors.map(id => ({ id }))
-          ]
-        }
-      }
+          connect: [...createBookDto.authors.map((id) => ({ id }))],
+        },
+      },
     });
   }
 
@@ -37,8 +32,8 @@ export class BooksService {
       include: {
         publisher: true,
         authors: true,
-        styles: true
-      }
+        styles: true,
+      },
     });
   }
 
@@ -49,11 +44,12 @@ export class BooksService {
         real: true,
         reviews: true,
         authors: true,
-        styles: true
-      }
-    })
-    if (!book) throw new HttpException("Нет такой книги", HttpStatus.BAD_REQUEST)
-    else return book
+        styles: true,
+      },
+    });
+    if (!book)
+      throw new HttpException('Нет такой книги', HttpStatus.BAD_REQUEST);
+    else return book;
   }
 
   update(id: number, updateBookDto: UpdateBookDto) {

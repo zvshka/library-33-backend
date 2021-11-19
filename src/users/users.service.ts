@@ -1,68 +1,67 @@
-import {Injectable} from "@nestjs/common";
-import {PrismaService} from "../prisma/prisma.service";
-import {UpdateDto} from "./dto/update.dto";
-import {UserEntity} from "./entities/user.entity";
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { UpdateDto } from './dto/update.dto';
+import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-    constructor(private prisma: PrismaService) {
-    }
+  constructor(private prisma: PrismaService) {}
 
-    async create(data) {
-        return await this.prisma.user.create({
-            data
-        });
-    }
+  async create(data) {
+    return await this.prisma.user.create({
+      data,
+    });
+  }
 
-    async findByUsername(username) {
-        return await this.prisma.user.findUnique({
-            where: {
-                username
-            }
-        })
-    }
+  async findByUsername(username) {
+    return await this.prisma.user.findUnique({
+      where: {
+        username,
+      },
+    });
+  }
 
-    async findByEmail(email) {
-        return await this.prisma.user.findUnique({
-            where: {
-                email
-            }
-        })
-    }
+  async findByEmail(email) {
+    return await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+  }
 
-    async findById(userId) {
-        return await this.prisma.user.findUnique({
-            where: {
-                id: userId
-            }
-        });
-    }
+  async findById(userId) {
+    return await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+  }
 
-    async findAll() {
-        return await this.prisma.user.findMany();
-    }
+  async findAll() {
+    return await this.prisma.user.findMany();
+  }
 
-    async aboutMe(id) {
-        const user = await this.prisma.user.findUnique({
-            where: {
-                id
-            }
-        });
+  async aboutMe(id) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
 
-        return new UserEntity(user);
-    }
+    return new UserEntity(user);
+  }
 
-    async updateMe(userId, updateDto: UpdateDto) {
-        const updated = await this.prisma.user.update({
-            where: {
-                id: userId
-            },
-            data: updateDto
-        });
+  async updateMe(userId, updateDto: UpdateDto) {
+    const updated = await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: updateDto,
+    });
 
-        delete updated.secret;
-        delete updated.password;
+    delete updated.secret;
+    delete updated.password;
 
-        return updated;
-    }
+    return updated;
+  }
 }

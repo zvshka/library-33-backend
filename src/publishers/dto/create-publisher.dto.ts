@@ -1,6 +1,6 @@
-import {ApiProperty} from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreatePublisherDto {
-    @ApiProperty({description: "Название издателя", example: "OldButGoldBooks"})
-    name: string
+  @ApiProperty({ description: 'Название издателя', example: 'OldButGoldBooks' })
+  name: string;
 }
