@@ -73,7 +73,7 @@ model Order {
 model Publisher {
   id     Int    @id @default(autoincrement())
   name   String @db.VarChar(255)
-  adress String @db.VarChar(50)
+  address String @db.VarChar(50)
 
   books Book[]
 }

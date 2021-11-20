@@ -1,7 +1,8 @@
-import { Book } from '../../books/entities/book.entity';
+import {Book} from '../../books/entities/book.entity';
 
-export class Author {
-  id: number;
-  name: string;
-  books?: Book[];
+export class AuthorEntity {
+    id: number;
+    name: string;
+    description: string;
+    books?: Book[];
 }

@@ -42,15 +42,18 @@ export class AuthorsController {
 
     @ApiOperation({
         tags: ['Авторы'],
+        security: [{bearer: []}],
         summary: "Обновить автора"
     })
     @Patch(':id')
-    @Auth(ADMIN)    update(@Param('id') id: string, @Body() updateAuthorDto: UpdateAuthorDto) {
+    @Auth(ADMIN)
+    update(@Param('id') id: string, @Body() updateAuthorDto: UpdateAuthorDto) {
         return this.authorsService.update(+id, updateAuthorDto);
     }
 
     @ApiOperation({
         tags: ['Авторы'],
+        security: [{bearer: []}],
         summary: "Удалить автора из базы"
     })
     @Delete(':id')

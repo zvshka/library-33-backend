@@ -1,4 +1,4 @@
-import {Author} from '../../authors/entities/author.entity';
+import {AuthorEntity} from '../../authors/entities/author.entity';
 import {Style} from '../../styles/entities/style.entity';
 import {Publisher} from '../../publishers/entities/publisher.entity';
 
@@ -7,6 +7,6 @@ export class Book {
     title: string
     description: string
     publisher?: Publisher
-    authors?: Author[]
+    authors?: AuthorEntity[]
     styles?: Style[]
 }

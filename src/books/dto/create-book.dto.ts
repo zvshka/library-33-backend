@@ -19,14 +19,12 @@ export class CreateBookDto {
 
     @ApiProperty({description: 'Список ID авторов', example: [1]})
     @IsArray()
-    @ValidateNested({each: true})
     @ArrayMinSize(1)
     @IsNumber({}, {each: true})
     authors: number[];
 
     @ApiProperty({description: 'Список ID жанров', example: [1]})
     @IsArray()
-    @ValidateNested({each: true})
     @ArrayMinSize(1)
     @IsNumber({}, {each: true})
     styles: number[];

@@ -6,7 +6,12 @@ import {validate} from 'class-validator';
 export class ValidationPipe implements PipeTransform<any> {
     async transform(value: any, metadata: ArgumentMetadata): Promise<any> {
         const obj = plainToClass(metadata.metatype, value);
-        const errors = await validate(obj);
+        let errors
+        try {
+            errors = await validate(obj)
+        } catch (e) {
+            errors = []
+        }
 
         if (errors.length) {
             const messages = errors.map((err) => {
