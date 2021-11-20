@@ -14,6 +14,7 @@ import { UserEntity } from './entities/user.entity';
 import { User } from '../auth/decorators/user.decorator';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { UpdateDto } from './dto/update.dto';
+import {ADMIN} from "../auth/decorators/roles-auth.decorator";
 
 @Controller('users')
 export class UsersController {
@@ -50,7 +51,7 @@ export class UsersController {
   @ApiResponse({
     type: [UserEntity],
   })
-  @Auth('ADMIN')
+  @Auth(ADMIN)
   @Get()
   findAll() {
     return this.usersService.findAll();

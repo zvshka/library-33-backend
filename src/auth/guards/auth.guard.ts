@@ -21,7 +21,6 @@ export class AuthGuard implements CanActivate {
         });
       }
       req.user = this.tokensService.validateAccessToken(token);
-      console.log(req.user);
       return true;
     } catch (e) {
       throw new UnauthorizedException({

@@ -23,9 +23,10 @@ datasource db {
 }
 
 model Author {
-  id    Int    @id @default(autoincrement())
-  name  String @unique @db.VarChar(70)
-  books Book[]
+  id          Int     @id @default(autoincrement())
+  name        String  @unique @db.VarChar(70)
+  description String? @db.VarChar(255)
+  books       Book[]
 }
 
 model Book {
@@ -54,8 +55,8 @@ model Offence {
   user User @relation(fields: [userId], references: [id])
 
   date        DateTime @db.Date
-  description String   @db.VarChar(255)
   expire      DateTime @db.Date
+  description String   @db.VarChar(255)
 }
 
 model Order {
@@ -70,23 +71,29 @@ model Order {
 }
 
 model Publisher {
-  id    Int    @id @default(autoincrement())
-  name  String @db.VarChar(255)
+  id     Int    @id @default(autoincrement())
+  name   String @db.VarChar(255)
+  adress String @db.VarChar(50)
+
   books Book[]
 }
 
 model Real {
-  id        Int       @id @default(autoincrement())
-  bookId    Int
-  book      Book      @relation(fields: [bookId], references: [id])
+  id Int @id @default(autoincrement())
+
+  bookId Int
+  book   Book @relation(fields: [bookId], references: [id])
+
   available Boolean
-  offences  Offence[]
-  orders    Order[]
+
+  offences Offence[]
+  orders   Order[]
 }
 
 model Review {
   id     Int    @id @default(autoincrement())
   rating Int
+  title  String @db.VarChar(100)
   text   String @db.VarChar(255)
 
   bookId Int
@@ -97,9 +104,10 @@ model Review {
 }
 
 model Style {
-  id    Int    @id @default(autoincrement())
-  name  String @unique @db.VarChar(40)
-  books Book[]
+  id          Int     @id @default(autoincrement())
+  name        String  @unique @db.VarChar(40)
+  description String? @db.VarChar(255)
+  books       Book[]
 }
 
 model User {
@@ -111,19 +119,12 @@ model User {
   lastName  String? @db.VarChar(30)
 
   role       RoleEnum  @default(USER)
-  secret     String?   @default(uuid()) @db.Uuid
+  secret     String    @default(uuid()) @db.Uuid
   likedBooks Book[]
   offences   Offence[]
   orders     Order[]
   reviews    Review[]
   tokens     Token[]
-}
-
-model Session {
-  id        String   @id
-  sid       String   @unique
-  data      String
-  expiresAt DateTime
 }
 
 enum RoleEnum {
@@ -133,8 +134,7 @@ enum RoleEnum {
 
 model Token {
   refreshToken String @unique
-  userId       Int
-  user         User   @relation(fields: [userId], references: [id])
 
-  @@id([userId])
+  userId Int  @id
+  user   User @relation(fields: [userId], references: [id])
 }

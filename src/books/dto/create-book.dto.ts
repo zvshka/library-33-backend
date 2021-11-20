@@ -1,24 +1,33 @@
-import { ApiProperty } from '@nestjs/swagger';
-import * as Joiful from 'joiful';
+import {ApiProperty} from '@nestjs/swagger';
+import {ArrayMinSize, IsArray, IsNumber, IsPositive, IsString, Length, ValidateNested} from "class-validator";
 
 export class CreateBookDto {
-  @ApiProperty({ description: 'Название книги', example: 'Похождения ШаШ' })
-  @(Joiful.string().required())
-  title: string;
+    @ApiProperty({description: 'Название книги', example: 'Похождения ШаШ'})
+    @IsString({message: "Должно быть строкой"})
+    @Length(8, 70, {message: "Минимум 8 символов и максимум 70"})
+    title: string;
 
-  @ApiProperty({ description: 'Описание книги', example: 'ШаШ ходит' })
-  @(Joiful.string().max(250))
-  description?: string;
+    @ApiProperty({description: 'Описание книги', example: 'ШаШ ходит'})
+    @IsString({message: "Должно быть строкой"})
+    @Length(0, 250, {message: "Максимум 250 символов"})
+    description?: string;
 
-  @ApiProperty({ description: 'ID издателя', example: 1 })
-  @(Joiful.number().required())
-  publisher: number;
+    @ApiProperty({description: 'ID издателя', example: 1})
+    @IsNumber({allowNaN: false, allowInfinity: false, maxDecimalPlaces: 0})
+    @IsPositive()
+    publisher: number;
 
-  @ApiProperty({ description: 'Список ID авторов', example: [1] })
-  @(Joiful.array().items((joi) => joi.number()))
-  authors: number[];
+    @ApiProperty({description: 'Список ID авторов', example: [1]})
+    @IsArray()
+    @ValidateNested({each: true})
+    @ArrayMinSize(1)
+    @IsNumber({}, {each: true})
+    authors: number[];
 
-  @ApiProperty({ description: 'Список ID жанров', example: [1] })
-  @(Joiful.array().items((joi) => joi.number()))
-  styles: number[];
+    @ApiProperty({description: 'Список ID жанров', example: [1]})
+    @IsArray()
+    @ValidateNested({each: true})
+    @ArrayMinSize(1)
+    @IsNumber({}, {each: true})
+    styles: number[];
 }
