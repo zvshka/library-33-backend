@@ -2,7 +2,6 @@ import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {CreateAuthorDto} from './dto/create-author.dto';
 import {UpdateAuthorDto} from './dto/update-author.dto';
 import {PrismaService} from '../prisma/prisma.service';
-import {AuthorEntity} from "./entities/author.entity";
 
 @Injectable()
 export class AuthorsService {
@@ -20,6 +19,8 @@ export class AuthorsService {
     }
 
     async findOne(id: number) {
+        if (isNaN(id)) throw new HttpException("id не является числом", HttpStatus.BAD_REQUEST)
+        if (id < 1) throw new HttpException("id не может быть меньше 1", HttpStatus.BAD_REQUEST)
         return await this.prisma.author.findUnique({
             where: {
                 id,
@@ -31,6 +32,8 @@ export class AuthorsService {
     }
 
     async update(id: number, updateAuthorDto: UpdateAuthorDto) {
+        if (isNaN(id)) throw new HttpException("id не является числом", HttpStatus.BAD_REQUEST)
+        if (id < 1) throw new HttpException("id не может быть меньше 1", HttpStatus.BAD_REQUEST)
         let author = await this.prisma.author.findUnique({
             where: {
                 id
@@ -48,6 +51,8 @@ export class AuthorsService {
     }
 
     async remove(id: number) {
+        if (isNaN(id)) throw new HttpException("id не является числом", HttpStatus.BAD_REQUEST)
+        if (id < 1) throw new HttpException("id не может быть меньше 1", HttpStatus.BAD_REQUEST)
         let author = await this.prisma.author.findUnique({
             where: {
                 id

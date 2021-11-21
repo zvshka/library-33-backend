@@ -19,7 +19,6 @@ export class ValidationPipe implements PipeTransform<any> {
             });
             throw new HttpException({
                 message: "Провалена валидация",
-                status: HttpStatus.BAD_REQUEST,
                 errors: messages
             }, HttpStatus.BAD_REQUEST);
         }
