@@ -15,7 +15,7 @@ export class CreateBookDto {
     @ApiProperty({description: 'ID издателя', example: 1})
     @IsNumber({allowNaN: false, allowInfinity: false, maxDecimalPlaces: 0})
     @IsPositive()
-    publisher: number;
+    publisherId: number;
 
     @ApiProperty({description: 'Список ID авторов', example: [1]})
     @IsArray()

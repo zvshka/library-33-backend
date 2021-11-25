@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateStyleDto } from './create-style.dto';
+import {PartialType} from '@nestjs/swagger';
+import {CreateStyleDto} from './create-style.dto';
 
-export class UpdateStyleDto extends PartialType(CreateStyleDto) {}
+export class UpdateStyleDto extends PartialType(CreateStyleDto) {
+    id: number
+}

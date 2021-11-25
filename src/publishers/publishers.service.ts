@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {CreatePublisherDto} from './dto/create-publisher.dto';
 import {UpdatePublisherDto} from './dto/update-publisher.dto';
 import {PrismaService} from '../prisma/prisma.service';
@@ -18,15 +18,43 @@ export class PublishersService {
         return await this.prisma.publisher.findMany();
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} publisher`;
+    async findOne(id: number) {
+        if (isNaN(id)) throw new HttpException("id не является числом", HttpStatus.BAD_REQUEST)
+        if (id < 1) throw new HttpException("id не может быть меньше 1", HttpStatus.BAD_REQUEST)
+        const candidate = await this.prisma.publisher.findUnique({
+            where: {
+                id
+            }
+        })
+        if (!candidate) throw new HttpException("Нет такого издателя", HttpStatus.BAD_REQUEST)
+        return candidate
     }
 
-    update(id: number, updatePublisherDto: UpdatePublisherDto) {
-        return `This action updates a #${id} publisher`;
+    async update(id: number, updatePublisherDto: UpdatePublisherDto) {
+        if (isNaN(id)) throw new HttpException("id не является числом", HttpStatus.BAD_REQUEST)
+        if (id < 1) throw new HttpException("id не может быть меньше 1", HttpStatus.BAD_REQUEST)
+        const candidate = await this.prisma.publisher.findUnique({
+            where: {
+                id
+            }
+        })
+        if (!candidate) throw new HttpException("Нет такого издателя", HttpStatus.BAD_REQUEST)
+        return "TODO"
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} publisher`;
+    async remove(id: number) {
+        if (isNaN(id)) throw new HttpException("id не является числом", HttpStatus.BAD_REQUEST)
+        if (id < 1) throw new HttpException("id не может быть меньше 1", HttpStatus.BAD_REQUEST)
+        const candidate = await this.prisma.publisher.findUnique({
+            where: {
+                id
+            }
+        })
+        if (!candidate) throw new HttpException("Нет такого издателя", HttpStatus.BAD_REQUEST)
+        return await this.prisma.publisher.delete({
+            where: {
+                id
+            }
+        })
     }
 }

@@ -7,7 +7,7 @@ import {Auth} from '../auth/decorators/auth.decorator';
 import {UpdateDto} from './dto/update.dto';
 import {ADMIN} from "../auth/decorators/roles-auth.decorator";
 
-@ApiTags("Пользователь")
+@ApiTags("Пользователи")
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {

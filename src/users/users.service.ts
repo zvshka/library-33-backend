@@ -30,14 +30,6 @@ export class UsersService {
         });
     }
 
-    async findById(userId) {
-        return await this.prisma.user.findUnique({
-            where: {
-                id: userId,
-            },
-        });
-    }
-
     async findAll() {
         return await this.prisma.user.findMany();
     }

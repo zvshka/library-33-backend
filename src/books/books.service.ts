@@ -15,7 +15,7 @@ export class BooksService {
                 description: createBookDto.description,
                 publisher: {
                     connect: {
-                        id: createBookDto.publisher,
+                        id: createBookDto.publisherId,
                     },
                 },
                 styles: {
@@ -28,17 +28,20 @@ export class BooksService {
         });
     }
 
-    async findAll() {
+    async findAll(page) {
         return await this.prisma.book.findMany({
-            include: {
+            select: {
+                id: true,
                 publisher: true,
                 authors: true,
                 styles: true,
-            },
+            }
         });
     }
 
     async findOne(id: number) {
+        if (isNaN(id)) throw new HttpException("id не является числом", HttpStatus.BAD_REQUEST)
+        if (id < 1) throw new HttpException("id не может быть меньше 1", HttpStatus.BAD_REQUEST)
         const book = await this.prisma.book.findUnique({
             where: {
                 id
@@ -55,38 +58,31 @@ export class BooksService {
     }
 
     async update(id: number, updateBookDto: UpdateBookDto) {
-        let book = await this.prisma.book.findUnique({
+        if (isNaN(id)) throw new HttpException("id не является числом", HttpStatus.BAD_REQUEST)
+        if (id < 1) throw new HttpException("id не может быть меньше 1", HttpStatus.BAD_REQUEST)
+        const candidate = await this.prisma.book.findUnique({
             where: {
                 id
-            },
-            include: {
-                styles: {
-                    select: {
-                        id: true
-                    },
-                },
-                authors: {
-                    select: {
-                        id: true
-                    },
-                }
             }
         })
-        book.styles.map(({id}) => id)
-        book.authors.map(({id}) => id)
-        if (!book) throw new HttpException("Нет такой книги", HttpStatus.BAD_REQUEST)
-        console.log(book)
-        // if (!arraysEqual(book.styles, updateBookDto.styles))
-        // await this.prisma.book.update({
-        //     where: {
-        //         id
-        //     },
-        //     data: {}
-        // })
+        if (!candidate) throw new HttpException("Нет такого издателя", HttpStatus.BAD_REQUEST)
+        return "TODO"
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} book`;
+    async remove(id: number) {
+        if (isNaN(id)) throw new HttpException("id не является числом", HttpStatus.BAD_REQUEST)
+        if (id < 1) throw new HttpException("id не может быть меньше 1", HttpStatus.BAD_REQUEST)
+        const candidate = await this.prisma.book.findUnique({
+            where: {
+                id
+            }
+        })
+        if (!candidate) throw new HttpException("Нет такого издателя", HttpStatus.BAD_REQUEST)
+        return this.prisma.book.delete({
+            where: {
+                id
+            }
+        })
     }
 }
 

@@ -1,21 +1,12 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete,
-    UseGuards,
-} from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, Query} from '@nestjs/common';
 import {BooksService} from './books.service';
 import {CreateBookDto} from './dto/create-book.dto';
 import {UpdateBookDto} from './dto/update-book.dto';
-import {ApiOperation} from '@nestjs/swagger';
-import {ADMIN, Roles} from '../auth/decorators/roles-auth.decorator';
-import {RolesGuard} from '../auth/guards/roles.guard';
+import {ApiOperation, ApiQuery, ApiTags} from '@nestjs/swagger';
+import {ADMIN} from '../auth/decorators/roles-auth.decorator';
 import {Auth} from '../auth/decorators/auth.decorator';
 
+@ApiTags("Книги")
 @Controller('books')
 export class BooksController {
     constructor(private readonly booksService: BooksService) {
@@ -24,7 +15,6 @@ export class BooksController {
     @ApiOperation({
         summary: 'Создать новую книгу',
         security: [{bearer: []}],
-        tags: ['Книги'],
     })
     @Auth(ADMIN)
     @Post()
@@ -33,16 +23,39 @@ export class BooksController {
     }
 
     @ApiOperation({
-        tags: ['Книги'],
         summary: "Показать все книги"
     })
     @Get()
-    findAll() {
-        return this.booksService.findAll();
+    @ApiQuery({
+        name: "publisherId",
+        required: false
+    })
+    @ApiQuery({
+        name: "stylesId",
+        required: false
+    })
+    @ApiQuery({
+        name: "authorsId",
+        required: false
+    })
+    @ApiQuery({
+        name: "available",
+        required: false
+    })
+    findAll(
+        @Query("page",) page: number,
+        @Query("publisherId") publisherId: number,
+        @Query("stylesId") stylesId: string,
+        @Query("authorsId") authorsId: string,
+        @Query("available") available: string
+    ) {
+        // TODO Pagination
+        // TODO Sorting
+        // TODO Filtering
+        return this.booksService.findAll(page);
     }
 
     @ApiOperation({
-        tags: ['Книги'],
         summary: "Показать информацию о книге"
     })
     @Get(':id')
@@ -51,7 +64,6 @@ export class BooksController {
     }
 
     @ApiOperation({
-        tags: ['Книги'],
         security: [{bearer: []}],
         summary: "Обновить информацию о книге"
     })
@@ -62,7 +74,6 @@ export class BooksController {
     }
 
     @ApiOperation({
-        tags: ['Книги'],
         security: [{bearer: []}],
         summary: "Удалить книгу"
     })

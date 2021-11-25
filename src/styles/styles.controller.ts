@@ -2,10 +2,11 @@ import {Body, Controller, Delete, Get, Param, Patch, Post,} from '@nestjs/common
 import {StylesService} from './styles.service';
 import {CreateStyleDto} from './dto/create-style.dto';
 import {UpdateStyleDto} from './dto/update-style.dto';
-import {ApiOperation} from '@nestjs/swagger';
+import {ApiOperation, ApiTags} from '@nestjs/swagger';
 import {ADMIN} from '../auth/decorators/roles-auth.decorator';
 import {Auth} from '../auth/decorators/auth.decorator';
 
+@ApiTags("Жанры")
 @Controller('styles')
 export class StylesController {
     constructor(private readonly stylesService: StylesService) {
@@ -14,7 +15,6 @@ export class StylesController {
     @ApiOperation({
         summary: 'Создать новый жанр',
         security: [{bearer: []}],
-        tags: ['Жанры'],
     })
     @Auth(ADMIN)
     @Post()
@@ -23,7 +23,6 @@ export class StylesController {
     }
 
     @ApiOperation({
-        tags: ['Жанры'],
         summary: "Показать все жанры"
     })
     @Get()
@@ -32,7 +31,6 @@ export class StylesController {
     }
 
     @ApiOperation({
-        tags: ['Жанры'],
         summary: "Показать информацию о жанре"
     })
     @Get(':id')
@@ -41,7 +39,6 @@ export class StylesController {
     }
 
     @ApiOperation({
-        tags: ['Жанры'],
         summary: "Обновить жанр"
     })
     @Patch(':id')
@@ -51,7 +48,6 @@ export class StylesController {
     }
 
     @ApiOperation({
-        tags: ['Жанры'],
         summary: "Удалить жанр"
     })
     @Delete(':id')

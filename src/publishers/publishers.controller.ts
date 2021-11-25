@@ -2,10 +2,11 @@ import {Body, Controller, Delete, Get, Param, Patch, Post,} from '@nestjs/common
 import {PublishersService} from './publishers.service';
 import {CreatePublisherDto} from './dto/create-publisher.dto';
 import {UpdatePublisherDto} from './dto/update-publisher.dto';
-import {ApiOperation} from '@nestjs/swagger';
+import {ApiOperation, ApiTags} from '@nestjs/swagger';
 import {ADMIN} from '../auth/decorators/roles-auth.decorator';
 import {Auth} from '../auth/decorators/auth.decorator';
 
+@ApiTags("Издатели")
 @Controller('publishers')
 export class PublishersController {
     constructor(private readonly publishersService: PublishersService) {
@@ -14,7 +15,6 @@ export class PublishersController {
     @ApiOperation({
         summary: 'Создать нового издателя',
         security: [{bearer: []}],
-        tags: ['Издатели'],
     })
     @Auth(ADMIN)
     @Post()
@@ -23,7 +23,6 @@ export class PublishersController {
     }
 
     @ApiOperation({
-        tags: ['Издатели'],
         summary: "Показать всех издателей"
     })
     @Get()
@@ -32,7 +31,6 @@ export class PublishersController {
     }
 
     @ApiOperation({
-        tags: ['Издатели'],
         summary: "Показать информацию о издателе"
     })
     @Get(':id')
@@ -41,7 +39,6 @@ export class PublishersController {
     }
 
     @ApiOperation({
-        tags: ['Издатели'],
         summary: "Обновить информацию об издателе"
     })
     @Patch(':id')
@@ -54,7 +51,6 @@ export class PublishersController {
     }
 
     @ApiOperation({
-        tags: ['Издатели'],
         summary: "Удалить издателя"
     })
     @Auth(ADMIN)

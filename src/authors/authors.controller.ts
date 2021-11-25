@@ -2,10 +2,11 @@ import {Body, Controller, Delete, Get, Param, Patch, Post,} from '@nestjs/common
 import {AuthorsService} from './authors.service';
 import {CreateAuthorDto} from './dto/create-author.dto';
 import {UpdateAuthorDto} from './dto/update-author.dto';
-import {ApiOperation} from '@nestjs/swagger';
+import {ApiOperation, ApiTags} from '@nestjs/swagger';
 import {Auth} from '../auth/decorators/auth.decorator';
 import {ADMIN} from "../auth/decorators/roles-auth.decorator";
 
+@ApiTags("Авторы")
 @Controller('authors')
 export class AuthorsController {
     constructor(private readonly authorsService: AuthorsService) {
@@ -14,7 +15,6 @@ export class AuthorsController {
     @ApiOperation({
         summary: 'Создать нового автора',
         security: [{bearer: []}],
-        tags: ['Авторы'],
     })
     @Auth(ADMIN)
     @Post()
@@ -24,7 +24,6 @@ export class AuthorsController {
 
     @ApiOperation({
         summary: 'Получить всех авторов',
-        tags: ['Авторы'],
     })
     @Get()
     findAll() {
@@ -32,7 +31,6 @@ export class AuthorsController {
     }
 
     @ApiOperation({
-        tags: ['Авторы'],
         summary: 'Получить все книги автора',
     })
     @Get(':id')
@@ -41,7 +39,6 @@ export class AuthorsController {
     }
 
     @ApiOperation({
-        tags: ['Авторы'],
         security: [{bearer: []}],
         summary: "Обновить автора"
     })
@@ -52,7 +49,6 @@ export class AuthorsController {
     }
 
     @ApiOperation({
-        tags: ['Авторы'],
         security: [{bearer: []}],
         summary: "Удалить автора из базы"
     })
