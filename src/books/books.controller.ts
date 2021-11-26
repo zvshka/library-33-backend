@@ -8,7 +8,7 @@ import {
     Delete,
     Query,
     UseInterceptors,
-    ClassSerializerInterceptor
+    ClassSerializerInterceptor, ParseIntPipe, ParseArrayPipe
 } from '@nestjs/common';
 import {BooksService} from './books.service';
 import {CreateBookDto} from './dto/create-book.dto';
@@ -74,7 +74,6 @@ export class BooksController {
         type: String,
         enum: ["all", "true", "false"]
     })
-    @UseInterceptors(ClassSerializerInterceptor)
     getPage(
         @Query() query: GetPageDto,
     ) {
