@@ -21,11 +21,13 @@ export class CreateBookDto {
     @IsArray()
     @ArrayMinSize(1)
     @IsNumber({}, {each: true})
+    @IsPositive({each: true})
     authors: number[];
 
     @ApiProperty({description: 'Список ID жанров', example: [1]})
     @IsArray()
     @ArrayMinSize(1)
     @IsNumber({}, {each: true})
+    @IsPositive({each: true})
     styles: number[];
 }

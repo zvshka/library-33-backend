@@ -8,7 +8,7 @@ export class ValidationPipe implements PipeTransform<any> {
         const obj = plainToClass(metadata.metatype, value);
         let errors
         try {
-            errors = await validate(obj)
+            errors = await validate(obj, {skipMissingProperties: true})
         } catch (e) {
             errors = []
         }

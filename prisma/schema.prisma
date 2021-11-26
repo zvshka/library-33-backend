@@ -84,7 +84,7 @@ model Real {
   bookId Int
   book   Book @relation(fields: [bookId], references: [id])
 
-  available Boolean
+  available Boolean @default(true)
 
   offences Offence[]
   orders   Order[]

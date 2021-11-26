@@ -1,10 +1,23 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, Query} from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    Query,
+    UseInterceptors,
+    ClassSerializerInterceptor
+} from '@nestjs/common';
 import {BooksService} from './books.service';
 import {CreateBookDto} from './dto/create-book.dto';
 import {UpdateBookDto} from './dto/update-book.dto';
 import {ApiOperation, ApiQuery, ApiTags} from '@nestjs/swagger';
 import {ADMIN} from '../auth/decorators/roles-auth.decorator';
 import {Auth} from '../auth/decorators/auth.decorator';
+import {CreateRealBookDto} from "./dto/create-real-book.dto";
+import {GetPageDto} from "./dto/get-page.dto";
 
 @ApiTags("Книги")
 @Controller('books')
@@ -23,36 +36,49 @@ export class BooksController {
     }
 
     @ApiOperation({
+        summary: 'Создать новую книгу',
+        security: [{bearer: []}],
+    })
+    @Auth(ADMIN)
+    @Post("/real")
+    createReal(@Body() createRealBookDto: CreateRealBookDto) {
+        return this.booksService.createReal(createRealBookDto);
+    }
+
+    @ApiOperation({
         summary: "Показать все книги"
     })
     @Get()
+    @ApiQuery({
+        name: "page",
+        required: true,
+        type: Number
+    })
     @ApiQuery({
         name: "publisherId",
         required: false
     })
     @ApiQuery({
         name: "stylesId",
-        required: false
+        required: false,
+        type: [Number]
     })
     @ApiQuery({
         name: "authorsId",
-        required: false
+        required: false,
+        type: [Number]
     })
     @ApiQuery({
         name: "available",
-        required: false
+        required: false,
+        type: String,
+        enum: ["all", "true", "false"]
     })
-    findAll(
-        @Query("page",) page: number,
-        @Query("publisherId") publisherId: number,
-        @Query("stylesId") stylesId: string,
-        @Query("authorsId") authorsId: string,
-        @Query("available") available: string
+    @UseInterceptors(ClassSerializerInterceptor)
+    getPage(
+        @Query() query: GetPageDto,
     ) {
-        // TODO Pagination
-        // TODO Sorting
-        // TODO Filtering
-        return this.booksService.findAll(page);
+        return this.booksService.getPage(query);
     }
 
     @ApiOperation({
@@ -81,5 +107,15 @@ export class BooksController {
     @Auth(ADMIN)
     remove(@Param('id') id: string) {
         return this.booksService.remove(+id);
+    }
+
+    @ApiOperation({
+        security: [{bearer: []}],
+        summary: "Удалить книгу"
+    })
+    @Delete('/real/:id')
+    @Auth(ADMIN)
+    removeReal(@Param('id') id: string) {
+        return this.booksService.removeReal(+id);
     }
 }

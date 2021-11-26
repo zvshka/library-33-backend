@@ -2,6 +2,7 @@ import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {CreateBookDto} from './dto/create-book.dto';
 import {UpdateBookDto} from './dto/update-book.dto';
 import {PrismaService} from '../prisma/prisma.service';
+import {CreateRealBookDto} from "./dto/create-real-book.dto";
 
 @Injectable()
 export class BooksService {
@@ -9,6 +10,30 @@ export class BooksService {
     }
 
     async create(createBookDto: CreateBookDto) {
+        const publisher = await this.prisma.publisher.findUnique({
+            where: {
+                id: createBookDto.publisherId
+            }
+        })
+        if (!publisher) throw new HttpException("Нет такого издателя", HttpStatus.BAD_REQUEST)
+        const styles = createBookDto.styles.map((id) => ({id}))
+        const stylesInDatabase = await this.prisma.style.findMany({
+            where: {
+                id: {
+                    in: createBookDto.styles
+                }
+            }
+        })
+        if (stylesInDatabase.length < styles.length) throw new HttpException("Некоторые указанные жанры не существуют", HttpStatus.BAD_REQUEST)
+        const authors = createBookDto.authors.map((id) => ({id}))
+        const authorsInDatabase = await this.prisma.author.findMany({
+            where: {
+                id: {
+                    in: createBookDto.authors
+                }
+            }
+        })
+        if (authorsInDatabase.length < authors.length) throw new HttpException("Некоторые указанные авторы не существуют", HttpStatus.BAD_REQUEST)
         return await this.prisma.book.create({
             data: {
                 title: createBookDto.title,
@@ -19,17 +44,47 @@ export class BooksService {
                     },
                 },
                 styles: {
-                    connect: [...createBookDto.styles.map((id) => ({id}))],
+                    connect: styles,
                 },
                 authors: {
-                    connect: [...createBookDto.authors.map((id) => ({id}))],
+                    connect: authors,
                 },
             },
+            include: {
+                publisher: true
+            }
         });
     }
 
-    async findAll(page) {
+    async getPage(query) {
+        let {available = "all", authorsId = [], stylesId = [], publisherId = 0, page} = query
+        let where = {}
+        if (available !== "all") {
+            where = Object.assign(where, {
+                real: {
+                    some: {
+                        available: {
+                            equals: available === "true"
+                        }
+                    }
+                }
+            })
+        }
+        if (authorsId.length > 0) {
+            const authors = authorsId.map(str => Number(str))
+            where = Object.assign(where, {
+
+            })
+        }
+        if (stylesId.length > 0) {
+
+        }
+        if (publisherId > 0) {
+
+        }
+
         return await this.prisma.book.findMany({
+            where,
             select: {
                 id: true,
                 publisher: true,
@@ -83,6 +138,14 @@ export class BooksService {
                 id
             }
         })
+    }
+
+    async createReal(createRealBookDto: CreateRealBookDto) {
+
+    }
+
+    async removeReal(id: number) {
+        return "TODO"
     }
 }
 
