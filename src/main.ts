@@ -4,7 +4,8 @@ import {PrismaService} from './prisma/prisma.service';
 import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
 // import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 // import * as session from 'express-session';
-import {ValidationPipe} from './auth/pipes/valiadtion.pipe';
+// import {ValidationPipe} from './auth/pipes/valiadtion.pipe';
+import {ValidationPipe} from "@nestjs/common";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -24,7 +25,7 @@ async function bootstrap() {
     const prismaService: PrismaService = app.get(PrismaService);
     await prismaService.enableShutdownHooks(app);
 
-    app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalPipes(new ValidationPipe({transform: true, skipMissingProperties: true}));
     app.enableCors({
         // origin: ['http://localhost:3000', 'http://localhost:5000'],
         origin: "http://localhost:3000",

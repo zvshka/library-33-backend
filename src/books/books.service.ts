@@ -9,6 +9,19 @@ export class BooksService {
     constructor(private prisma: PrismaService) {
     }
 
+    private async checkArr(itemsRaw, db) {
+        const items = itemsRaw instanceof Array ? itemsRaw : [itemsRaw]
+        const itemsInDatabase = await db.findMany({
+            where: {
+                id: {
+                    in: items
+                }
+            }
+        })
+        if (itemsInDatabase.length < items.length) throw new HttpException("Некоторых авторов не существует", HttpStatus.BAD_REQUEST)
+        return items
+    }
+
     async create(createBookDto: CreateBookDto) {
         const publisher = await this.prisma.publisher.findUnique({
             where: {
@@ -57,10 +70,9 @@ export class BooksService {
     }
 
     async getPage(query) {
-        let {available = "all", authorsId = [], stylesId = [], publisherId = 0, page} = query
+        let {available = "all", authorsId, stylesId, publisherId, page} = query
         let where = {}
         if (available !== "all") {
-            // TODO сделать проверку на присутствие в целом реальных копий
             where = Object.assign(where, {
                 real: {
                     some: {
@@ -72,64 +84,32 @@ export class BooksService {
             })
         }
 
-        //TODO переделать, избавиться от дублирования кода
-        if (authorsId.length > 0) {
-            const authors = authorsId instanceof Array ? authorsId.map(str => Number(str)) : Number(authorsId)
-            if (authors instanceof Array) {
-                if (authors.some(isNaN)) throw new HttpException("Не правильный формат авторов", HttpStatus.BAD_REQUEST)
-            } else {
-                if (isNaN(authors)) throw new HttpException("Не правильный формат авторов", HttpStatus.BAD_REQUEST)
-            }
-
-            const authorsInDatabase = await this.prisma.author.findMany({
-                where: {
-                    id: {
-                        in: authors instanceof Array ? authors : [authors]
-                    }
-                }
-            })
-
-            if (authorsInDatabase.length < (authors instanceof Array ? authors.length : 1)) throw new HttpException("Некоторых авторов не существует", HttpStatus.BAD_REQUEST)
-
+        if (authorsId) {
+            const authors = await this.checkArr(authorsId, this.prisma.author)
             where = Object.assign(where, {
                 authors: {
-                    every: {
+                    some: {
                         id: {
-                            in: authors instanceof Array ? authors : [authors]
+                            in: authors
                         }
                     }
                 }
             })
         }
-        if (stylesId.length > 0) {
-            const styles = stylesId instanceof Array ? stylesId.map(str => Number(str)) : Number(stylesId)
-            if (styles instanceof Array) {
-                if (styles.some(isNaN)) throw new HttpException("Не правильный формат авторов", HttpStatus.BAD_REQUEST)
-            } else {
-                if (isNaN(styles)) throw new HttpException("Не правильный формат авторов", HttpStatus.BAD_REQUEST)
-            }
 
-            const stylesInDatabase = await this.prisma.style.findMany({
-                where: {
-                    id: {
-                        in: styles instanceof Array ? styles : [styles]
-                    }
-                }
-            })
-
-            if (stylesInDatabase.length < (styles instanceof Array ? styles.length : 1)) throw new HttpException("Некоторых авторов не существует", HttpStatus.BAD_REQUEST)
+        if (stylesId) {
+            const styles = await this.checkArr(stylesId, this.prisma.style)
             where = Object.assign(where, {
                 styles: {
-                    every: {
+                    some: {
                         id: {
-                            in: styles instanceof Array ? styles : [styles]
+                            in: styles
                         }
                     }
                 }
             })
         }
-        if (publisherId > 0) {
-            publisherId = Number(publisherId)
+        if (publisherId) {
             const publisher = await this.prisma.publisher.findUnique({
                 where: {
                     id: publisherId
@@ -143,6 +123,8 @@ export class BooksService {
 
         return await this.prisma.book.findMany({
             where,
+            skip: (page - 1) * 15,
+            take: (page) * 15,
             select: {
                 id: true,
                 publisher: true,

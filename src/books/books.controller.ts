@@ -77,6 +77,7 @@ export class BooksController {
     getPage(
         @Query() query: GetPageDto,
     ) {
+        //TODO Сортировка
         return this.booksService.getPage(query);
     }
 
