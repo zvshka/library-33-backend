@@ -35,5 +35,5 @@ export class GetPageDto {
 
     @ApiProperty({description: "Наличие, по умолчанию будет all", example: "all"})
     @IsEnum(available)
-    available?: "all" | "true" | "false"
+    available?: available
 }

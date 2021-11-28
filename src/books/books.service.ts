@@ -181,15 +181,28 @@ export class BooksService {
     }
 
     async createReal(createRealBookDto: CreateRealBookDto) {
-
+        const candidate = await this.prisma.book.findUnique({
+            where: {
+                id: createRealBookDto.bookId
+            }
+        })
+        if (!candidate) throw new HttpException("Книги с таким id не существует", HttpStatus.BAD_REQUEST)
+        return await this.prisma.real.create({
+            data: createRealBookDto
+        })
     }
 
     async removeReal(id: number) {
-        return "TODO"
+        const candidate = await this.prisma.real.findUnique({
+            where: {
+                id
+            }
+        })
+        if (!candidate) throw new HttpException("Книги с таким id не существует", HttpStatus.BAD_REQUEST)
+        return await this.prisma.real.delete({
+            where: {
+                id
+            }
+        })
     }
-}
-
-function arraysEqual(a1, a2) {
-    /* WARNING: arrays must not contain {objects} or behavior may be undefined */
-    return JSON.stringify(a1) === JSON.stringify(a2);
 }

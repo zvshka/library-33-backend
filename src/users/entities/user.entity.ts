@@ -1,27 +1,27 @@
-import { Book } from '../../books/entities/book.entity';
-import { Exclude } from 'class-transformer';
+import {Book} from '../../books/entities/book.entity';
+import {Exclude} from 'class-transformer';
 
 export class UserEntity {
-  id: number;
-  email: string;
-  username: string;
+    id: number;
+    email: string;
+    username: string;
 
-  @Exclude()
-  password: string;
+    @Exclude()
+    password: string;
 
-  firstName?: string;
-  lastName?: string;
+    firstName?: string;
+    lastName?: string;
 
-  @Exclude()
-  secret: string;
+    @Exclude()
+    secret: string;
 
-  role: string;
-  reviews?: [];
-  orders?: [];
-  offences?: [];
-  likedBooks?: Book[];
+    role: string;
+    reviews?: [];
+    orders?: [];
+    offences?: [];
+    likedBooks?: Book[];
 
-  constructor(partial: Partial<UserEntity>) {
-    Object.assign(this, partial);
-  }
+    constructor(partial: Partial<UserEntity>) {
+        Object.assign(this, partial);
+    }
 }

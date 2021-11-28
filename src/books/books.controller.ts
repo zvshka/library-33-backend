@@ -50,28 +50,8 @@ export class BooksController {
     })
     @Get()
     @ApiQuery({
-        name: "page",
-        required: true,
-        type: Number
-    })
-    @ApiQuery({
-        name: "publisherId",
-        required: false
-    })
-    @ApiQuery({
-        name: "stylesId",
-        required: false,
-        type: [Number]
-    })
-    @ApiQuery({
-        name: "authorsId",
-        required: false,
-        type: [Number]
-    })
-    @ApiQuery({
         name: "available",
         required: false,
-        type: String,
         enum: ["all", "true", "false"]
     })
     getPage(

@@ -2,21 +2,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-//generator prismaClassGenerator {
-//    provider   = "prisma-class-generator"
-//    useSwagger = true
-//    dryRun     = false
-//    output     = "../src/dto/"
-//}
-
-//generator docs {
-//  provider = "node node_modules/prisma-docs-generator"
-//}
-//
-//generator dbml {
-//  provider = "prisma-dbml-generator"
-//}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

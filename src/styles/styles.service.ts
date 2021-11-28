@@ -39,7 +39,15 @@ export class StylesService {
             }
         })
         if (!candidate) throw new HttpException("Нет такого издателя", HttpStatus.BAD_REQUEST)
-        return `This action updates a #${id} style`;
+        return await this.prisma.style.update({
+            where: {
+                id
+            },
+            data: {
+                description: updateStyleDto.description?.length > 0 && updateStyleDto.description !== candidate.description ? updateStyleDto.description : candidate.description,
+                name: updateStyleDto.name?.length > 0 && updateStyleDto.name !== candidate.name ? updateStyleDto.name : candidate.name
+            }
+        })
     }
 
     async remove(id: number) {

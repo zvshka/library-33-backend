@@ -1,7 +1,7 @@
-import { Book } from '../../books/entities/book.entity';
+import {Book} from '../../books/entities/book.entity';
 
 export class Publisher {
-  id: number;
-  name: string;
-  books?: Book[];
+    id: number;
+    name: string;
+    books?: Book[];
 }
