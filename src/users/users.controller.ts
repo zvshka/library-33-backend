@@ -25,16 +25,6 @@ export class UsersController {
     }
 
     @ApiOperation({
-        summary: 'Обновить информацию о себе',
-        security: [{bearer: []}],
-    })
-    @Auth()
-    @Get('/@me/likedBooks')
-    getLikedBooks(@User() user: UserEntity) {
-        return this.usersService.getLikedBooks(user)
-    }
-
-    @ApiOperation({
         summary: 'Удалить книгу из понравившиеся',
         security: [{bearer: []}],
     })

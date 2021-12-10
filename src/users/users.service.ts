@@ -40,6 +40,12 @@ export class UsersService {
             where: {
                 id,
             },
+            include: {
+                likedBooks: true,
+                orders: true,
+                offences: true,
+                reviews: true
+            }
         });
 
         return new UserEntity(user);
@@ -53,17 +59,6 @@ export class UsersService {
             data: updateDto,
         });
         return new UserEntity(updated);
-    }
-
-    async getLikedBooks(user) {
-        return this.prisma.user.findUnique({
-            where: {
-                id: user.id
-            },
-            select: {
-                likedBooks: true
-            }
-        })
     }
 
     async likeBook(user: UserEntity, likeBookDto: LikeBookDto) {
