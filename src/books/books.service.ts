@@ -70,7 +70,7 @@ export class BooksService {
     }
 
     async getPage(query) {
-        let {available = "all", authorsId, stylesId, publisherId, page} = query
+        let {available = "all", authorsId, stylesId, publisherId, page = 1} = query
         let where = {}
         if (available !== "all") {
             where = Object.assign(where, {

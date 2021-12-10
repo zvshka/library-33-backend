@@ -31,26 +31,8 @@ async function bootstrap() {
         origin: "http://localhost:3000",
         credentials: true,
     });
-    // app.use(
-    //     session({
-    //         cookie: {
-    //             maxAge: 60 * 1000 // ms
-    //         },
-    //         secret: 'topsecretcode',
-    //         resave: true,
-    //         saveUninitialized: false,
-    //         store: new PrismaSessionStore(
-    //             prismaService,
-    //             {
-    //                 checkPeriod: 15 * 1000,  //ms
-    //                 dbRecordIdIsSessionId: true,
-    //                 dbRecordIdFunction: undefined,
-    //             }
-    //         )
-    //     })
-    // );
 
-    await app.listen(3000);
+    await app.listen(5000);
 }
 
 bootstrap();
