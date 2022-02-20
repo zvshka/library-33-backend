@@ -52,7 +52,15 @@ model Order {
   real   Real @relation(fields: [realId], references: [id])
   user   User @relation(fields: [userId], references: [id])
 
+  status OrderStatus
+
   return_date DateTime @db.Date
+}
+
+enum OrderStatus {
+    ACTIVE
+    DONE
+    CANCELED
 }
 
 model Publisher {
