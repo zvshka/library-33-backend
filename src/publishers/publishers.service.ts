@@ -39,7 +39,14 @@ export class PublishersService {
             }
         })
         if (!candidate) throw new HttpException("Нет такого издателя", HttpStatus.BAD_REQUEST)
-        return "TODO"
+        return await this.prisma.publisher.update({
+            where: {
+                id
+            },
+            data: {
+                ...updatePublisherDto
+            }
+        })
     }
 
     async remove(id: number) {

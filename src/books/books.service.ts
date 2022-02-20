@@ -4,22 +4,26 @@ import {UpdateBookDto} from './dto/update-book.dto';
 import {PrismaService} from '../prisma/prisma.service';
 import {CreateRealBookDto} from "./dto/create-real-book.dto";
 
+async function findItemsInArray(itemsRaw, db) {
+    const items = itemsRaw instanceof Array ? itemsRaw : [itemsRaw]
+    const itemsInDatabase = await db.findMany({
+        where: {
+            id: {
+                in: items
+            }
+        }
+    })
+    if (itemsInDatabase.length < items.length) throw new HttpException("Некоторых авторов не существует", HttpStatus.BAD_REQUEST)
+    return items
+}
+
+function findDifference(arr1, arr2) {
+    return arr1.filter(x => !arr2.includes(x));
+}
+
 @Injectable()
 export class BooksService {
     constructor(private prisma: PrismaService) {
-    }
-
-    private async checkArr(itemsRaw, db) {
-        const items = itemsRaw instanceof Array ? itemsRaw : [itemsRaw]
-        const itemsInDatabase = await db.findMany({
-            where: {
-                id: {
-                    in: items
-                }
-            }
-        })
-        if (itemsInDatabase.length < items.length) throw new HttpException("Некоторых авторов не существует", HttpStatus.BAD_REQUEST)
-        return items
     }
 
     async create(createBookDto: CreateBookDto) {
@@ -85,7 +89,7 @@ export class BooksService {
         }
 
         if (authorsId) {
-            const authors = await this.checkArr(authorsId, this.prisma.author)
+            const authors = await findItemsInArray(authorsId, this.prisma.author)
             where = Object.assign(where, {
                 authors: {
                     some: {
@@ -98,7 +102,7 @@ export class BooksService {
         }
 
         if (stylesId) {
-            const styles = await this.checkArr(stylesId, this.prisma.style)
+            const styles = await findItemsInArray(stylesId, this.prisma.style)
             where = Object.assign(where, {
                 styles: {
                     some: {
@@ -157,10 +161,40 @@ export class BooksService {
         const candidate = await this.prisma.book.findUnique({
             where: {
                 id
+            },
+            include: {
+                authors: true,
+                styles: true
             }
         })
         if (!candidate) throw new HttpException("Нет такого издателя", HttpStatus.BAD_REQUEST)
-        return "TODO"
+
+        const authorsDisconnect = findDifference(candidate.authors.map(a => a.id), updateBookDto.authors)
+        const authorsConnect = findDifference(updateBookDto.authors, candidate.authors.map(a => a.id))
+
+        const stylesDisconnect = findDifference(candidate.styles.map(a => a.id), updateBookDto.styles)
+        const stylesConnect = findDifference(updateBookDto.styles, candidate.styles.map(a => a.id))
+
+        return await this.prisma.book.update({
+            where: {
+                id,
+            },
+            data: {
+                title: updateBookDto?.title,
+                description: updateBookDto?.description,
+                publisher: {
+                    connect: {id: updateBookDto?.publisher}
+                },
+                authors: {
+                    connect: authorsConnect.map(id => ({id})),
+                    disconnect: authorsDisconnect.map(id => ({id}))
+                },
+                styles: {
+                    connect: stylesConnect.map(id => ({id})),
+                    disconnect: stylesDisconnect.map(id => ({id}))
+                }
+            }
+        })
     }
 
     async remove(id: number) {
