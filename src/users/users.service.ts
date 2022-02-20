@@ -1,7 +1,8 @@
-import {Injectable} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {PrismaService} from '../prisma/prisma.service';
 import {UpdateDto} from './dto/update.dto';
 import {UserEntity} from './entities/user.entity';
+import {LikeBookDto} from "./dto/likeBook.dto";
 
 @Injectable()
 export class UsersService {
@@ -39,6 +40,12 @@ export class UsersService {
             where: {
                 id,
             },
+            include: {
+                likedBooks: true,
+                orders: true,
+                offences: true,
+                reviews: true
+            }
         });
 
         return new UserEntity(user);
@@ -52,5 +59,62 @@ export class UsersService {
             data: updateDto,
         });
         return new UserEntity(updated);
+    }
+
+    async likeBook(user: UserEntity, likeBookDto: LikeBookDto) {
+        const candidate = await this.prisma.book.findUnique({
+            where: {
+                id: likeBookDto.id
+            },
+        })
+        if (!candidate) throw new HttpException("Книги с таким id не существует", HttpStatus.BAD_REQUEST)
+        return await this.prisma.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                likedBooks: {
+                    connect: {
+                        id: likeBookDto.id
+                    }
+                }
+            },
+            select: {
+                likedBooks: true
+            }
+        })
+    }
+
+    async unlikeBook(user: UserEntity, likeBookDto: LikeBookDto) {
+        const userData = await this.prisma.user.findUnique({
+            where: {
+                id: user.id
+            },
+            select: {
+                likedBooks: true
+            }
+        })
+        const candidate = await this.prisma.book.findUnique({
+            where: {
+                id: likeBookDto.id
+            },
+        })
+        if (!candidate) throw new HttpException("Книги с таким id не существует", HttpStatus.BAD_REQUEST)
+        if (!userData.likedBooks.some(book => book.id !== likeBookDto.id)) throw new HttpException("Книги с таким id в понравившихся не существует", HttpStatus.BAD_REQUEST)
+        return await this.prisma.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                likedBooks: {
+                    disconnect: {
+                        id: likeBookDto.id
+                    }
+                }
+            },
+            select: {
+                likedBooks: true
+            }
+        })
     }
 }

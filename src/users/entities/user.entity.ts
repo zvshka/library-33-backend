@@ -16,9 +16,9 @@ export class UserEntity {
     secret: string;
 
     role: string;
-    reviews?: [];
-    orders?: [];
-    offences?: [];
+    reviews?: any[];
+    orders?: any[];
+    offences?: any[];
     likedBooks?: Book[];
 
     constructor(partial: Partial<UserEntity>) {

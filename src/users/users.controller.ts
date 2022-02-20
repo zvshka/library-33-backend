@@ -1,10 +1,11 @@
-import {Body, ClassSerializerInterceptor, Controller, Get, Patch, UseInterceptors,} from '@nestjs/common';
+import {Body, ClassSerializerInterceptor, Controller, Delete, Get, Patch, Post, UseInterceptors,} from '@nestjs/common';
 import {UsersService} from './users.service';
 import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {UserEntity} from './entities/user.entity';
 import {User} from '../auth/decorators/user.decorator';
 import {Auth} from '../auth/decorators/auth.decorator';
 import {UpdateDto} from './dto/update.dto';
+import {LikeBookDto} from "./dto/likeBook.dto";
 import {ADMIN} from "../auth/decorators/roles-auth.decorator";
 
 @ApiTags("Пользователи")
@@ -21,6 +22,26 @@ export class UsersController {
     @Patch('/@me')
     updateMe(@User() user: UserEntity, @Body() updateDto: UpdateDto) {
         return this.usersService.updateMe(user.id, updateDto);
+    }
+
+    @ApiOperation({
+        summary: 'Удалить книгу из понравившиеся',
+        security: [{bearer: []}],
+    })
+    @Auth()
+    @Delete('/@me/likedBooks')
+    unlikeBook(@User() user: UserEntity, @Body() likeBookDto: LikeBookDto) {
+        return this.usersService.unlikeBook(user, likeBookDto)
+    }
+
+    @ApiOperation({
+        summary: 'Добавить книгу в понравившиеся',
+        security: [{bearer: []}],
+    })
+    @Auth()
+    @Post('/@me/likedBooks')
+    likeBook(@User() user: UserEntity, @Body() likeBookDto: LikeBookDto) {
+        return this.usersService.likeBook(user, likeBookDto)
     }
 
     @ApiOperation({
