@@ -1,3 +1,3 @@
 export class CreateOrderDto {
-    realId: number
+    bookId: number
 }

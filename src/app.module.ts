@@ -8,7 +8,7 @@ import { PublishersModule } from './publishers/publishers.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from '@algoan/nestjs-logging-interceptor';
 import { ReviewsModule } from './reviews/reviews.module';
-import { OffencesModule } from './offences/offences.module';
+// import { OffencesModule } from './offences/offences.module';
 import { OrdersModule } from './orders/orders.module';
 
 @Module({
@@ -20,7 +20,7 @@ import { OrdersModule } from './orders/orders.module';
     UsersModule,
     PublishersModule,
     ReviewsModule,
-    OffencesModule,
+    // OffencesModule,
     OrdersModule,
   ],
   controllers: [],

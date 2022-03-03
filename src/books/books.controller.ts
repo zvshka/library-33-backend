@@ -1,15 +1,4 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete,
-    Query,
-    UseInterceptors,
-    ClassSerializerInterceptor, ParseIntPipe, ParseArrayPipe
-} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Post, Query,} from '@nestjs/common';
 import {BooksService} from './books.service';
 import {CreateBookDto} from './dto/create-book.dto';
 import {UpdateBookDto} from './dto/update-book.dto';
