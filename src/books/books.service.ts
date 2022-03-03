@@ -152,7 +152,22 @@ export class BooksService {
             },
         });
         if (!book) throw new HttpException('Нет такой книги', HttpStatus.BAD_REQUEST);
-        else return book;
+        const inUse = await this.prisma.order.findMany({
+            where: {
+                OR: [{status: "IN_USE"}, {status: "AWAITS"}],
+                realId: {
+                    in: book.real.map(r => r.id)
+                }
+            }
+        })
+        const inUseIds = inUse.map(d => d.realId)
+        const realIds = book.real.map(d => d.id)
+
+        const diff = findDifference(realIds, inUseIds)
+        return {
+            ...book,
+            available: diff.length > 0
+        };
     }
 
     async update(id: number, updateBookDto: UpdateBookDto) {
