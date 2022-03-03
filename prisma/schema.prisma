@@ -130,3 +130,10 @@ model Token {
   userId Int  @id
   user   User @relation(fields: [userId], references: [id])
 }
+
+model Image {
+  filename String @unique
+  filepath String
+  mimetype String
+  size     Int
+}
