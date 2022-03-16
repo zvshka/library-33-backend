@@ -6,6 +6,17 @@ import {RegisterDto} from '../dto/register.dto';
 import {UserDto} from '../dto/user.dto';
 import {LoginDto} from '../dto/login.dto';
 import {UserEntity} from '../../users/entities/user.entity';
+import nodemailer from "nodemailer"
+
+let transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: process.env.EMAIL_SECURE, // true for 465, false for other ports
+    auth: {
+        user: process.env.EMAIL_USERNAME, // generated ethereal user
+        pass: process.env.EMAIL_PASSWORD, // generated ethereal password
+    },
+});
 
 @Injectable()
 export class AuthService {
@@ -44,6 +55,14 @@ export class AuthService {
         });
         const tokens = this.tokensService.generateToken(user);
         await this.tokensService.saveToken(user.id, tokens.refreshToken);
+        let info = await transporter.sendMail({
+            from: '"Fred Foo 👻" <foo@example.com>', // sender address
+            to: user.email, // list of receivers
+            subject: "Hello ✔", // Subject line
+            text: "Hello world?", // plain text body
+            html: "<b>Hello world?</b>", // html body
+        });
+        console.log("Message sent: %s", info.messageId);
         return {...tokens, user: new UserEntity(user)};
     }
 

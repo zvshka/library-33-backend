@@ -15,25 +15,25 @@ export class GetPageDto {
     @IsPositive()
     page: number
 
-    @ApiProperty({description: 'ID издателя', example: 1})
+    @ApiProperty({description: 'ID издателя', example: 1, required: false})
     @Type(() => Number)
     @IsNumber({allowNaN: false, allowInfinity: false, maxDecimalPlaces: 0})
     @IsPositive()
     publisherId?: number
 
-    @ApiProperty({description: 'Список ID жанров', example: [1]})
+    @ApiProperty({description: 'Список ID жанров', example: [1], required: false})
     @Type(() => Number)
     @IsNumber({allowNaN: false, allowInfinity: false, maxDecimalPlaces: 0}, {each: true})
     @IsPositive({each: true})
     stylesId?: number[]
 
-    @ApiProperty({description: 'Список ID авторов', example: [1]})
+    @ApiProperty({description: 'Список ID авторов', example: [1], required: false})
     @Type(() => Number)
     @IsNumber({allowNaN: false, allowInfinity: false, maxDecimalPlaces: 0}, {each: true})
     @IsPositive({each: true})
     authorsId?: number[]
 
-    @ApiProperty({description: "Наличие, по умолчанию будет all", example: "all"})
+    @ApiProperty({description: "Наличие, по умолчанию будет all", example: "all", required: false})
     @IsEnum(available)
     available?: available
 }
