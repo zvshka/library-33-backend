@@ -1,1 +1,1 @@
-server: npm start
+server: npm run start
