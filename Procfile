@@ -1,1 +1,1 @@
-server: npm run start
+server: npm run start:prod

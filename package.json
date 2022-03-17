@@ -8,7 +8,7 @@
   "scripts": {
     "studio": "prisma studio",
     "generate": "prisma generate",
-    "prebuild": "rimraf dist && prisma migrate deploy && prisma generate",
+    "prebuild": "rimraf dist && prisma db push && prisma generate",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",

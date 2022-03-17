@@ -28,7 +28,7 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe({transform: true, skipMissingProperties: true}));
     app.enableCors({
         // origin: ['http://localhost:3000', 'http://localhost:5000'],
-        origin: "http://localhost:3000",
+        origin: "https://library33.herokuapp.com",
         credentials: true,
     });
 
