@@ -15,6 +15,7 @@ specifiers:
   '@types/express-session': ^1.17.4
   '@types/jest': ^27.4.0
   '@types/node': ^16.11.25
+  '@types/nodemailer': ^6.4.4
   '@types/passport': ^1.0.7
   '@types/supertest': ^2.0.11
   '@typescript-eslint/eslint-plugin': ^5.12.0
@@ -24,6 +25,7 @@ specifiers:
   bcryptjs: ^2.4.3
   class-transformer: ^0.4.0
   class-validator: ^0.13.2
+  date-fns: ^2.28.0
   eslint: ^8.9.0
   eslint-config-prettier: ^8.4.0
   eslint-plugin-prettier: ^4.0.0
@@ -31,6 +33,7 @@ specifiers:
   jest: ^27.5.1
   joi: ^17.6.0
   joiful: ^3.0.2
+  nodemailer: ^6.7.2
   passport: ^0.5.2
   passport-jwt: ^4.0.0
   passport-local: ^1.0.0
@@ -63,9 +66,11 @@ dependencies:
   bcryptjs: 2.4.3
   class-transformer: 0.4.0
   class-validator: 0.13.2
+  date-fns: 2.28.0
   express-session: 1.17.2
   joi: 17.6.0
   joiful: 3.0.2_reflect-metadata@0.1.13
+  nodemailer: 6.7.2
   passport: 0.5.2
   passport-jwt: 4.0.0
   passport-local: 1.0.0
@@ -82,6 +87,7 @@ devDependencies:
   '@types/express-session': 1.17.4
   '@types/jest': 27.4.0
   '@types/node': 16.11.25
+  '@types/nodemailer': 6.4.4
   '@types/passport': 1.0.7
   '@types/supertest': 2.0.11
   '@typescript-eslint/eslint-plugin': 5.12.0_c467cf9bb49b295941e83ce479a578b7
@@ -1594,6 +1600,12 @@ packages:
   /@types/node/16.11.25:
     resolution: {integrity: sha512-NrTwfD7L1RTc2qrHQD4RTTy4p0CO2LatKBEKEds3CaVuhoM/+DJzmWZl5f+ikR8cm8F5mfJxK+9rQq07gRiSjQ==}
 
+  /@types/nodemailer/6.4.4:
+    resolution: {integrity: sha512-Ksw4t7iliXeYGvIQcSIgWQ5BLuC/mljIEbjf615svhZL10PE9t+ei8O9gDaD3FPCasUJn9KTLwz2JFJyiiyuqw==}
+    dependencies:
+      '@types/node': 16.11.25
+    dev: true
+
   /@types/normalize-package-data/2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
     dev: true
@@ -2861,6 +2873,11 @@ packages:
       whatwg-mimetype: 2.3.0
       whatwg-url: 8.7.0
     dev: true
+
+  /date-fns/2.28.0:
+    resolution: {integrity: sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==}
+    engines: {node: '>=0.11'}
+    dev: false
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -5233,6 +5250,11 @@ packages:
   /node-releases/2.0.2:
     resolution: {integrity: sha512-XxYDdcQ6eKqp/YjI+tb2C5WM2LgjnZrfYg4vgQt49EK268b6gYCHsBLrK2qvJo4FmCtqmKezb0WZFK4fkrZNsg==}
     dev: true
+
+  /nodemailer/6.7.2:
+    resolution: {integrity: sha512-Dz7zVwlef4k5R71fdmxwR8Q39fiboGbu3xgswkzGwczUfjp873rVxt1O46+Fh0j1ORnAC6L9+heI8uUpO6DT7Q==}
+    engines: {node: '>=6.0.0'}
+    dev: false
 
   /nopt/5.0.0:
     resolution: {integrity: sha512-Tbj67rffqceeLpcRXrT7vKAN8CwfPeIBgM7E6iBkmKLV7bEMwpGgYLGv0jACUsECaa/vuxP0IjEont6umdMgtQ==}

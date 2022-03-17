@@ -6,9 +6,10 @@ import {RegisterDto} from '../dto/register.dto';
 import {UserDto} from '../dto/user.dto';
 import {LoginDto} from '../dto/login.dto';
 import {UserEntity} from '../../users/entities/user.entity';
-import nodemailer from "nodemailer"
+import {createTransport} from "nodemailer"
 
-let transporter = nodemailer.createTransport({
+const transporter = createTransport({
+    //@ts-ignore
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
     secure: process.env.EMAIL_SECURE, // true for 465, false for other ports
@@ -56,7 +57,7 @@ export class AuthService {
         const tokens = this.tokensService.generateToken(user);
         await this.tokensService.saveToken(user.id, tokens.refreshToken);
         let info = await transporter.sendMail({
-            from: '"Fred Foo 👻" <foo@example.com>', // sender address
+            from: process.env.EMAIL_USERNAME, // sender address
             to: user.email, // list of receivers
             subject: "Hello ✔", // Subject line
             text: "Hello world?", // plain text body

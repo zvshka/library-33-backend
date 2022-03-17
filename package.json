@@ -8,7 +8,7 @@
   "scripts": {
     "studio": "prisma studio",
     "generate": "prisma generate",
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf dist && prisma generate",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -55,6 +55,7 @@
     "@types/express-session": "^1.17.4",
     "@types/jest": "^27.4.0",
     "@types/node": "^16.11.25",
+    "@types/nodemailer": "^6.4.4",
     "@types/passport": "^1.0.7",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
